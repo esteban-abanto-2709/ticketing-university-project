@@ -2,7 +2,7 @@ package ticketing;
 
 import java.util.Scanner;
 
-import ticketing.menus.LocalManagementMenu;
+import ticketing.view.LocalView;
 import ticketing.utils.ConsoleFormatter;
 
 public class Ticketing {
@@ -32,7 +32,7 @@ public class Ticketing {
 
             switch (opcion) {
                 case 1 ->
-                    LocalManagementMenu.mostrarMenu();
+                    LocalView.mostrarMenu();
                 case 2 ->
                     System.out.println("Módulo de eventos aún no implementado.");
                 case 3 ->
