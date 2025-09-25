@@ -73,4 +73,16 @@ public class ConsoleFormatter {
 
         System.out.println(leftWithTab + fill + rightWithTab);
     }
+    
+    public static void printError(String message) {
+        System.out.println("[Error]: " + message);
+    }
+    
+    public static void printInfo(String message) {
+        System.out.println("[Info]: " + message);
+    }
+    
+    public static void printSuccess(String message) {
+        System.out.println("[Success]: " + message);
+    }
 }
