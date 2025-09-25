@@ -4,14 +4,14 @@ import java.util.List;
 
 import ticketing.entities.Local;
 import ticketing.entities.Zone;
-import ticketing.services.LocalService;
+import ticketing.controller.LocalController;
 
 import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;
 
 public class LocalView {
 
-    private static LocalService localService = new LocalService();
+    private static final LocalController localService = new LocalController();
 
     public static void mostrarMenu() {
         int opcion;

@@ -1,15 +1,15 @@
-package ticketing.services;
+package ticketing.controller;
 
 import java.util.List;
 import ticketing.dao.interfaces.LocalDAO;
 import ticketing.dao.temporary.LocalDAOTemporary;
 import ticketing.entities.Local;
 
-public class LocalService {
+public class LocalController {
 
-    private LocalDAO localDAO;
+    private final LocalDAO localDAO;
 
-    public LocalService() {
+    public LocalController() {
         this.localDAO = new LocalDAOTemporary(); // Aquí cambiarás por BD cuando sea necesario
     }
 
