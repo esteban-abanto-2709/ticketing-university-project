@@ -36,6 +36,14 @@ public class Local {
     public List<Zone> getZonas() {
         return zonas;
     }
+    
+    public int getCapacidadTotal() {
+        int total = 0;
+        for (int i = 0; i < zonas.size(); i++) {
+            total += zonas.get(i).getCapacidad();
+        }
+        return total;
+    }
 
     @Override
     public String toString() {

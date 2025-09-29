@@ -11,7 +11,7 @@ import ticketing.utils.InputValidator;
 
 public class LocalView {
 
-    private static final LocalController localService = new LocalController();
+    private static final LocalController localController = new LocalController();
 
     public static void mostrarMenu() {
         int opcion;
@@ -20,9 +20,9 @@ public class LocalView {
             System.out.println();
             ConsoleFormatter.printTabbed("[1] Registrar Local");
             ConsoleFormatter.printTabbed("[2] Mostrar Locales");
-            ConsoleFormatter.printTabbed("[3] Buscar Local");
+            ConsoleFormatter.printTabbed("[3] Editar Local");
             ConsoleFormatter.printTabbed("[4] Ver Detalle de Local");
-            ConsoleFormatter.printTabbed("[5] Eliminar Local (pendiente)");
+            ConsoleFormatter.printTabbed("[5] Eliminar Local");
             System.out.println();
             ConsoleFormatter.printTabbed("[9] Volver al menú principal");
             ConsoleFormatter.printLine("-");
@@ -35,11 +35,11 @@ public class LocalView {
                 case 2 ->
                     mostrarLocales();
                 case 3 ->
-                    buscarLocales();
+                    editarLocal();
                 case 4 ->
                     verDetalleLocal();
                 case 5 ->
-                    System.out.println("Función eliminar (a implementar)");
+                    eliminarLocal();
                 case 9 ->
                     System.out.println("Regresando al menú principal...");
                 default ->
@@ -62,7 +62,7 @@ public class LocalView {
         String codigo = InputValidator.getCode("Ingrese código del local: ");
 
         // Verificar que el código no exista
-        if (localService.isCodeAlreadyExists(codigo)) {
+        if (localController.isCodeAlreadyExists(codigo)) {
             ConsoleFormatter.printError("Ya existe un local con el código: " + codigo);
             return;
         }
@@ -87,7 +87,7 @@ public class LocalView {
         mostrarResumenLocal(local);
 
         if (InputValidator.getConfirmation("¿Confirma el registro del local?")) {
-            if (localService.registerLocal(local)) {
+            if (localController.registerLocal(local)) {
                 ConsoleFormatter.printSuccess("Local registrado exitosamente.");
             } else {
                 ConsoleFormatter.printError("No se pudo registrar el local.");
@@ -101,49 +101,107 @@ public class LocalView {
         ConsoleFormatter.printCentered(" LISTA DE LOCALES ", "=");
         System.out.println();
 
-        if (!localService.hasLocals()) {
+        if (!localController.hasLocals()) {
             ConsoleFormatter.printInfo("No hay locales registrados.");
             return;
         }
 
-        List<Local> locales = localService.getAllLocals();
-        ConsoleFormatter.printList("Total de locales", String.valueOf(locales.size()), ".");
+        List<Local> locales = localController.getAllLocals();
+        ConsoleFormatter.printList("Total de locales", String.valueOf(locales.size()), " ");
         ConsoleFormatter.printLine("-");
 
         for (int i = 0; i < locales.size(); i++) {
             Local local = locales.get(i);
             System.out.println();
-            ConsoleFormatter.printTabbed((i + 1) + ". " + local.getNombre(), 1);
-            ConsoleFormatter.printTabbed("Código: " + local.getCodigo(), 2);
-            ConsoleFormatter.printTabbed("Dirección: " + local.getDireccion(), 2);
-            ConsoleFormatter.printTabbed("Zonas: " + local.getZonas().size(), 2);
+            ConsoleFormatter.printTabbed((i + 1) + ". " + local.getCodigo());
+            ConsoleFormatter.printList(local.getNombre(), String.valueOf(local.getCapacidadTotal()), " ");
+
         }
     }
 
-    private static void buscarLocales() {
-        ConsoleFormatter.printCentered(" BUSCAR LOCALES ", "=");
+    private static void editarLocal() {
+        ConsoleFormatter.printCentered(" EDITAR LOCAL ", "=");
         System.out.println();
 
-        if (!localService.hasLocals()) {
-            ConsoleFormatter.printInfo("No hay locales registrados para buscar.");
+        if (!localController.hasLocals()) {
+            ConsoleFormatter.printInfo("No hay locales registrados.");
             return;
         }
 
-        String termino = InputValidator.getNonEmptyString("Ingrese nombre del local a buscar: ");
-        List<Local> resultados = localService.searchLocalsByName(termino);
+        String codigo = InputValidator.getCode("Ingrese código del local a editar: ");
+        Local local = localController.getLocalByCode(codigo);
 
-        if (resultados.isEmpty()) {
-            ConsoleFormatter.printInfo("No se encontraron locales con el término: " + termino);
-        } else {
-            ConsoleFormatter.printSuccess("Se encontraron " + resultados.size() + " resultado(s):");
-            ConsoleFormatter.printLine("-");
+        if (local == null) {
+            ConsoleFormatter.printError("No se encontró un local con el código: " + codigo);
+            return;
+        }
 
-            for (Local local : resultados) {
-                System.out.println();
-                ConsoleFormatter.printTabbed("• " + local.getNombre(), 1);
-                ConsoleFormatter.printTabbed("Código: " + local.getCodigo(), 2);
-                ConsoleFormatter.printTabbed("Dirección: " + local.getDireccion(), 2);
+        // Mostrar datos actuales
+        System.out.println("\nDatos actuales:");
+        mostrarResumenLocal(local);
+        System.out.println();
+
+        // Pedir nuevos datos
+        ConsoleFormatter.printInfo("Ingrese los nuevos datos (o presione Enter para mantener el actual):");
+        System.out.println();
+        
+        String nuevoNombre = InputValidator.getNonEmptyString("Nuevo nombre [" + local.getNombre() + "]: ");
+        String nuevaDireccion = InputValidator.getNonEmptyString("Nueva dirección [" + local.getDireccion() + "]: ");
+
+        // Crear nuevo local con datos actualizados
+        Local localActualizado = new Local(codigo, nuevoNombre, nuevaDireccion);
+
+        // Copiar las zonas existentes
+        for (Zone zona : local.getZonas()) {
+            localActualizado.agregarZona(zona);
+        }
+
+        // Mostrar resumen de cambios
+        System.out.println("\nNuevos datos:");
+        mostrarResumenLocal(localActualizado);
+
+        if (InputValidator.getConfirmation("¿Confirma la edición del local?")) {
+            if (localController.updateLocal(localActualizado)) {
+                ConsoleFormatter.printSuccess("Local actualizado exitosamente.");
+            } else {
+                ConsoleFormatter.printError("No se pudo actualizar el local.");
             }
+        } else {
+            ConsoleFormatter.printInfo("Edición cancelada.");
+        }
+    }
+
+    private static void eliminarLocal() {
+        ConsoleFormatter.printCentered(" ELIMINAR LOCAL ", "=");
+        System.out.println();
+
+        if (!localController.hasLocals()) {
+            ConsoleFormatter.printInfo("No hay locales registrados.");
+            return;
+        }
+
+        String codigo = InputValidator.getCode("Ingrese código del local a eliminar: ");
+        Local local = localController.getLocalByCode(codigo);
+
+        if (local == null) {
+            ConsoleFormatter.printError("No se encontró un local con el código: " + codigo);
+            return;
+        }
+
+        // Mostrar datos del local a eliminar
+        System.out.println("\nLocal a eliminar:");
+        mostrarResumenLocal(local);
+
+        ConsoleFormatter.printWaring("Esta acción no se puede deshacer.");
+
+        if (InputValidator.getConfirmation("¿Está seguro de eliminar este local?")) {
+            if (localController.deleteLocal(codigo)) {
+                ConsoleFormatter.printSuccess("Local eliminado exitosamente.");
+            } else {
+                ConsoleFormatter.printError("No se pudo eliminar el local.");
+            }
+        } else {
+            ConsoleFormatter.printInfo("Eliminación cancelada.");
         }
     }
 
@@ -151,13 +209,13 @@ public class LocalView {
         ConsoleFormatter.printCentered(" DETALLE DE LOCAL ", "=");
         System.out.println();
 
-        if (!localService.hasLocals()) {
+        if (!localController.hasLocals()) {
             ConsoleFormatter.printInfo("No hay locales registrados.");
             return;
         }
 
         String codigo = InputValidator.getCode("Ingrese código del local: ");
-        Local local = localService.getLocalByCode(codigo);
+        Local local = localController.getLocalByCode(codigo);
 
         if (local == null) {
             ConsoleFormatter.printError("No se encontró un local con el código: " + codigo);

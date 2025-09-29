@@ -78,6 +78,10 @@ public class ConsoleFormatter {
         System.out.println("[Error]: " + message);
     }
     
+    public static void printWaring(String message) {
+        System.out.println("[Waring]: " + message);
+    }
+    
     public static void printInfo(String message) {
         System.out.println("[Info]: " + message);
     }

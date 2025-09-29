@@ -38,6 +38,11 @@ public class InputValidator {
         return value;
     }
 
+    public static String getOptionalString(String message) {
+        System.out.print(message);
+        return scanner.nextLine().trim();
+    }
+
     // Pide confirmación S/N
     public static boolean getConfirmation(String message) {
         String response;
