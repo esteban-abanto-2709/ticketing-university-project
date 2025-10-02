@@ -30,20 +30,13 @@ public class LocalView {
             opcion = InputValidator.getIntInRange("Seleccione una opción: ", 1, 9);
 
             switch (opcion) {
-                case 1 ->
-                    registrarLocal();
-                case 2 ->
-                    mostrarLocales();
-                case 3 ->
-                    editarLocal();
-                case 4 ->
-                    verDetalleLocal();
-                case 5 ->
-                    eliminarLocal();
-                case 9 ->
-                    System.out.println("Regresando al menú principal...");
-                default ->
-                    System.out.println("Opción no válida.");
+                case 1 -> registrarLocal();
+                case 2 -> mostrarLocales();
+                case 3 -> editarLocal();
+                case 4 -> verDetalleLocal();
+                case 5 -> eliminarLocal();
+                case 9 -> System.out.println("Regresando al menú principal...");
+                default -> System.out.println("Opción no válida.");
 
             }
 
@@ -70,18 +63,9 @@ public class LocalView {
         String nombre = InputValidator.getNonEmptyString("Ingrese nombre del local: ");
         String direccion = InputValidator.getNonEmptyString("Ingrese dirección del local: ");
 
-        Local local = new Local(codigo, nombre, direccion);
-
         // Registrar zonas
-        int numZonas = InputValidator.getIntInRange("¿Cuántas zonas desea registrar? ", 1, 20);
-
-        for (int i = 0; i < numZonas; i++) {
-            System.out.println("Zona " + (i + 1));
-            String nombreZona = InputValidator.getNonEmptyString("   Nombre de la zona: ");
-            int capacidad = InputValidator.getIntInRange("   Capacidad de la zona: ", 1, 50000);
-
-            local.agregarZona(new Zone(nombreZona, capacidad));
-        }
+        Zone[] zones = solicitarZonas();
+        Local local = new Local(codigo, nombre, direccion, zones);
 
         // Panel de confirmación
         mostrarResumenLocal(local);
@@ -128,11 +112,11 @@ public class LocalView {
             return;
         }
 
-        String codigo = InputValidator.getCode("Ingrese código del local a editar: ");
-        Local local = localController.getLocalByCode(codigo);
+        String code = InputValidator.getCode("Ingrese código del local a editar: ");
+        Local local = localController.getLocalByCode(code);
 
         if (local == null) {
-            ConsoleFormatter.printError("No se encontró un local con el código: " + codigo);
+            ConsoleFormatter.printError("No se encontró un local con el código: " + code);
             return;
         }
 
@@ -144,24 +128,28 @@ public class LocalView {
         // Pedir nuevos datos
         ConsoleFormatter.printInfo("Ingrese los nuevos datos (o presione Enter para mantener el actual):");
         System.out.println();
-        
-        String nuevoNombre = InputValidator.getNonEmptyString("Nuevo nombre [" + local.getNombre() + "]: ");
-        String nuevaDireccion = InputValidator.getNonEmptyString("Nueva dirección [" + local.getDireccion() + "]: ");
 
-        // Crear nuevo local con datos actualizados
-        Local localActualizado = new Local(codigo, nuevoNombre, nuevaDireccion);
+        String newName = InputValidator.getOptionalString("Nuevo nombre [" + local.getNombre() + "]: ");
+        if (!newName.isEmpty()) {
+            local.setNombre(newName);
+        }
 
-        // Copiar las zonas existentes
-        for (Zone zona : local.getZonas()) {
-            localActualizado.agregarZona(zona);
+        String newAddress = InputValidator.getOptionalString("Nueva dirección [" + local.getDireccion() + "]: ");
+        if (!newAddress.isEmpty()) {
+            local.setDireccion(newAddress);
+        }
+
+        if (InputValidator.getConfirmation("¿Desea modificar las zonas?")) {
+            Zone[] zones = solicitarZonas();
+            local.setZonas(zones);
         }
 
         // Mostrar resumen de cambios
         System.out.println("\nNuevos datos:");
-        mostrarResumenLocal(localActualizado);
+        mostrarResumenLocal(local);
 
         if (InputValidator.getConfirmation("¿Confirma la edición del local?")) {
-            if (localController.updateLocal(localActualizado)) {
+            if (localController.updateLocal(local)) {
                 ConsoleFormatter.printSuccess("Local actualizado exitosamente.");
             } else {
                 ConsoleFormatter.printError("No se pudo actualizar el local.");
@@ -169,6 +157,22 @@ public class LocalView {
         } else {
             ConsoleFormatter.printInfo("Edición cancelada.");
         }
+    }
+
+    private static Zone[] solicitarZonas() {
+        int numZonas = InputValidator.getIntInRange("¿Cuántas zonas desea registrar? ", 1, 20);
+
+        Zone[] zonas = new Zone[numZonas];
+
+        for (int i = 0; i < zonas.length; i++) {
+            System.out.println("Zona " + (i + 1));
+            String nombreZona = InputValidator.getNonEmptyString("   Nombre de la zona: ");
+            int capacidad = InputValidator.getIntInRange("   Capacidad de la zona: ", 1, 50000);
+
+            zonas[i] = new Zone(nombreZona, capacidad);
+        }
+
+        return zonas;
     }
 
     private static void eliminarLocal() {

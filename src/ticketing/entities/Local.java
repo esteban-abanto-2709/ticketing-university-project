@@ -1,26 +1,24 @@
 package ticketing.entities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Local {
-    
-    private String codigo;
+
+    private final String codigo;
     private String nombre;
     private String direccion;
-    private List<Zone> zonas;
+    private Zone[] zonas;
 
-    public Local(String codigo, String nombre, String direccion) {
+    public Local(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public Local(String codigo, String nombre, String direccion, Zone[] zonas) {
         this.codigo = codigo;
         this.nombre = nombre;
         this.direccion = direccion;
-        this.zonas = new ArrayList<>();
+        this.zonas = zonas;
     }
 
-    public void agregarZona(Zone zona) {
-        zonas.add(zona);
-    }
-
+    // --- Getters ---
     public String getCodigo() {
         return codigo;
     }
@@ -33,28 +31,33 @@ public class Local {
         return direccion;
     }
 
-    public List<Zone> getZonas() {
+    public Zone[] getZonas() {
         return zonas;
     }
-    
-    public int getCapacidadTotal() {
-        int total = 0;
-        for (int i = 0; i < zonas.size(); i++) {
-            total += zonas.get(i).getCapacidad();
-        }
-        return total;
+
+    // --- Setters (excepto código) ---
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    @Override
-    public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Local: ").append(nombre)
-          .append(" (Código: ").append(codigo).append(")\n")
-          .append("Dirección: ").append(direccion).append("\n")
-          .append("Zonas:\n");
-        for (Zone z : zonas) {
-            sb.append("   - ").append(z.toString()).append("\n");
+    public void setDireccion(String direccion) {
+        this.direccion = direccion;
+    }
+
+    public void setZonas(Zone[] zonas) {
+        this.zonas = zonas;
+    }
+
+    // --- Método de lógica ---
+    public int getCapacidadTotal() {
+        int total = 0;
+        if (zonas != null) {
+            for (Zone zona : zonas) {
+                if (zona != null) {
+                    total += zona.getCapacidad();
+                }
+            }
         }
-        return sb.toString();
+        return total;
     }
 }
