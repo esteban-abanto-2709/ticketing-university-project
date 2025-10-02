@@ -1,5 +1,9 @@
 package ticketing.utils;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Scanner;
 
 public class InputValidator {
@@ -75,5 +79,39 @@ public class InputValidator {
     public static void pressEnterToContinue() {
         System.out.println("\nPresione Enter para continuar...");
         scanner.nextLine();
+    }
+
+    public static LocalDate getDate(String message) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate fecha = null;
+
+        while (fecha == null) {
+            System.out.print(message);
+            String input = scanner.nextLine().trim();
+            try {
+                fecha = LocalDate.parse(input, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de fecha inválido. Use dd/MM/yyyy (ejemplo: 25/12/2024)");
+            }
+        }
+
+        return fecha;
+    }
+
+    public static LocalTime getTime(String message) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+        LocalTime hora = null;
+
+        while (hora == null) {
+            System.out.print(message);
+            String input = scanner.nextLine().trim();
+            try {
+                hora = LocalTime.parse(input, formatter);
+            } catch (DateTimeParseException e) {
+                System.out.println("Formato de hora inválido. Use HH:mm (ejemplo: 20:30)");
+            }
+        }
+
+        return hora;
     }
 }
