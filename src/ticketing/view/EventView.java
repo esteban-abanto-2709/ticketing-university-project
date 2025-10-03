@@ -11,11 +11,17 @@ import ticketing.entities.EventStatus;
 import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;
 
-public class EventoView {
+public class EventView {
 
     private static final EventController eventController = new EventController();
 
     public static void mostrarMenu() {
+        if(!eventController.hasLocals()){
+            ConsoleFormatter.printError("No existen locales creados.");
+            InputValidator.pressEnterToContinue();
+            return;
+        }
+
         int opcion;
 
         do {

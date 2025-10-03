@@ -3,7 +3,7 @@ package ticketing;
 import java.util.Scanner;
 
 import ticketing.utils.ConsoleFormatter;
-import ticketing.view.EventoView;
+import ticketing.view.EventView;
 import ticketing.view.LocalView;
 
 public class Ticketing {
@@ -33,7 +33,7 @@ public class Ticketing {
 
             switch (opcion) {
                 case 1 -> LocalView.mostrarMenu();
-                case 2 -> EventoView.mostrarMenu();
+                case 2 -> EventView.mostrarMenu();
                 case 3 -> System.out.println("Módulo de entradas aún no implementado.");
                 case 4 -> System.out.println("Módulo de ventas aún no implementado.");
                 case 5 -> System.out.println("Módulo de reportes aún no implementado.");

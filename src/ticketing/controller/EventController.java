@@ -206,4 +206,14 @@ public class EventController {
         }
         return localDAO.existsByCode(codigoLocal.trim());
     }
+
+    // Obtener estadísticas de locales
+    public int getTotalLocals() {
+        return localDAO.count();
+    }
+
+    // Verificar si hay locales registrados
+    public boolean hasLocals() {
+        return getTotalLocals() > 0;
+    }
 }

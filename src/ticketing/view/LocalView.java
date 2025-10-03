@@ -30,13 +30,20 @@ public class LocalView {
             opcion = InputValidator.getIntInRange("Seleccione una opción: ", 1, 9);
 
             switch (opcion) {
-                case 1 -> registrarLocal();
-                case 2 -> mostrarLocales();
-                case 3 -> editarLocal();
-                case 4 -> verDetalleLocal();
-                case 5 -> eliminarLocal();
-                case 9 -> System.out.println("Regresando al menú principal...");
-                default -> System.out.println("Opción no válida.");
+                case 1 ->
+                    registrarLocal();
+                case 2 ->
+                    mostrarLocales();
+                case 3 ->
+                    editarLocal();
+                case 4 ->
+                    verDetalleLocal();
+                case 5 ->
+                    eliminarLocal();
+                case 9 ->
+                    System.out.println("Regresando al menú principal...");
+                default ->
+                    System.out.println("Opción no válida.");
 
             }
 
@@ -97,9 +104,7 @@ public class LocalView {
         for (int i = 0; i < locales.size(); i++) {
             Local local = locales.get(i);
             System.out.println();
-            ConsoleFormatter.printTabbed((i + 1) + ". " + local.getCodigo());
-            ConsoleFormatter.printList(local.getNombre(), String.valueOf(local.getCapacidadTotal()), " ");
-
+            ConsoleFormatter.printList((i + 1) + ". [" + local.getCodigo() + "] getCodigo" + local.getNombre(), String.valueOf(local.getCapacidadTotal()), " ");
         }
     }
 
