@@ -86,7 +86,7 @@ public class ArtistView {
 
         for (int i = 0; i < artists.size(); i++) {
             Artist artist = artists.get(i);
-            ConsoleFormatter.printList((i + 1) + ". [" + artist.getCode() + "]", artist.getName(), " ");
+            ConsoleFormatter.printTabbed((i + 1) + ". " + artist.toString());
         }
     }
 

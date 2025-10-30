@@ -1,52 +1,122 @@
 package ticketing.artist;
 
-import java.util.ArrayList;
+import ticketing.DatabaseManager;
 import ticketing.interfaces.GenericDAO;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class ArtistDAO implements GenericDAO<Artist> {
 
-    // Temporal hasta implementar la base de datos
-    private static List<Artist> artists = new ArrayList<>();
-
     @Override
     public boolean save(Artist entity) {
-        Artist artist = findByCode(entity.getCode());
-        if (artist == null) {
-            return artists.add(entity);
-        } else {
+        String sql = "INSERT INTO artists (code, name) VALUES (?, ?)";
+        try {
+            DatabaseManager.execute(sql, entity.getCode(), entity.getName());
+            return true;
+        } catch (Exception e) {
+            System.err.println("[ArtistDAO] Error al guardar artista: " + e.getMessage());
             return false;
         }
     }
 
     @Override
     public Artist findByCode(String code) {
-        for (Artist artist : artists) {
-            if (artist.getCode().equalsIgnoreCase(code)) {
+        String sql = "SELECT * FROM artists WHERE code = ?";
+        try (ResultSet rs = DatabaseManager.query(sql, code)) {
+            if (rs != null && rs.next()) {
+                Artist artist = new Artist(rs.getString("code"));
+                artist.setName(rs.getString("name"));
                 return artist;
             }
+        } catch (SQLException e) {
+            System.err.println("[ArtistDAO] Error al buscar artista: " + e.getMessage());
         }
         return null;
     }
 
     @Override
     public List<Artist> findAll() {
-        return new ArrayList<>(artists);
+        String sql = "SELECT * FROM artists";
+        List<Artist> artists = new ArrayList<>();
+
+        try (ResultSet rs = DatabaseManager.query(sql)) {
+            while (rs != null && rs.next()) {
+                Artist artist = new Artist(rs.getString("code"));
+                artist.setName(rs.getString("name"));
+                artists.add(artist);
+            }
+        } catch (SQLException e) {
+            System.err.println("[ArtistDAO] Error al listar artistas: " + e.getMessage());
+        }
+
+        return artists;
     }
 
     @Override
     public boolean update(Artist entity) {
-        Artist artist = findByCode(entity.getCode());
-        if (artist == null) {
+        String sql = "UPDATE artists SET name = ? WHERE code = ?";
+        try {
+            DatabaseManager.execute(sql, entity.getName(), entity.getCode());
+            return true;
+        } catch (Exception e) {
+            System.err.println("[ArtistDAO] Error al actualizar artista: " + e.getMessage());
             return false;
         }
-
-        artist.setName(entity.getName());
-        return true;
     }
 
     @Override
     public boolean deleteByCode(String code) {
-        return artists.removeIf(artist -> artist.getCode().equalsIgnoreCase(code));
+        String sql = "DELETE FROM artists WHERE code = ?";
+        try {
+            DatabaseManager.execute(sql, code);
+            return true;
+        } catch (Exception e) {
+            System.err.println("[ArtistDAO] Error al eliminar artista: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // ------------------------------------------------------------
+    // 🔧 Métodos temporales para desarrollo (eliminar en producción)
+    // ------------------------------------------------------------
+
+    public static void createTableIfNotExists() {
+        String sql = """
+                    CREATE TABLE IF NOT EXISTS artists (
+                        code VARCHAR(20) PRIMARY KEY,
+                        name VARCHAR(100) NOT NULL
+                    )
+                """;
+        try {
+            DatabaseManager.execute(sql);
+            System.out.println("[ArtistDAO] Tabla 'artists' verificada o creada correctamente.");
+        } catch (Exception e) {
+            System.err.println("[ArtistDAO] Error al crear tabla 'artists': " + e.getMessage());
+        }
+    }
+
+    public static void insertSampleDataIfEmpty() {
+        String checkSql = "SELECT COUNT(*) AS total FROM artists";
+        try (ResultSet rs = DatabaseManager.query(checkSql)) {
+            if (rs != null && rs.next() && rs.getInt("total") == 0) {
+                System.out.println("[ArtistDAO] Insertando datos de prueba...");
+
+                String insertSql = """
+                            INSERT INTO artists (code, name) VALUES
+                            ('A001', 'The Rolling Stones'),
+                            ('A002', 'Coldplay'),
+                            ('A003', 'Adele')
+                        """;
+
+                DatabaseManager.execute(insertSql);
+                System.out.println("[ArtistDAO] Datos de prueba insertados correctamente.");
+            }
+        } catch (SQLException e) {
+            System.err.println("[ArtistDAO] Error al insertar datos de prueba: " + e.getMessage());
+        }
     }
 }
