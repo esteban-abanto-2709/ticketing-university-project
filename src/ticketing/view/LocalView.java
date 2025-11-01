@@ -201,7 +201,7 @@ public class LocalView {
         System.out.println("\nLocal a eliminar:");
         mostrarResumenLocal(local);
 
-        ConsoleFormatter.printWaring("Esta acción no se puede deshacer.");
+        ConsoleFormatter.printWarning("Esta acción no se puede deshacer.");
 
         if (InputValidator.getConfirmation("¿Está seguro de eliminar este local?")) {
             if (localController.deleteLocal(codigo)) {

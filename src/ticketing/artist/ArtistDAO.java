@@ -5,7 +5,6 @@ import ticketing.interfaces.GenericDAO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
             DatabaseManager.execute(sql, entity.getCode(), entity.getName());
             return true;
         } catch (Exception e) {
-            System.err.println("[ArtistDAO] Error al guardar artista: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error al guardar: " + e.getMessage());
             return false;
         }
     }
@@ -33,7 +32,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
                 return artist;
             }
         } catch (SQLException e) {
-            System.err.println("[ArtistDAO] Error al buscar artista: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error al buscar: " + e.getMessage());
         }
         return null;
     }
@@ -50,7 +49,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
                 artists.add(artist);
             }
         } catch (SQLException e) {
-            System.err.println("[ArtistDAO] Error al listar artistas: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error al listar: " + e.getMessage());
         }
 
         return artists;
@@ -63,7 +62,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
             DatabaseManager.execute(sql, entity.getName(), entity.getCode());
             return true;
         } catch (Exception e) {
-            System.err.println("[ArtistDAO] Error al actualizar artista: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error al actualizar: " + e.getMessage());
             return false;
         }
     }
@@ -75,7 +74,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
             DatabaseManager.execute(sql, code);
             return true;
         } catch (Exception e) {
-            System.err.println("[ArtistDAO] Error al eliminar artista: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error al eliminar: " + e.getMessage());
             return false;
         }
     }
@@ -86,16 +85,16 @@ public class ArtistDAO implements GenericDAO<Artist> {
 
     public static void createTableIfNotExists() {
         String sql = """
-                    CREATE TABLE IF NOT EXISTS artists (
-                        code VARCHAR(20) PRIMARY KEY,
-                        name VARCHAR(100) NOT NULL
-                    )
+                CREATE TABLE IF NOT EXISTS artists (
+                    code VARCHAR(20) PRIMARY KEY,
+                    name VARCHAR(100) NOT NULL
+                )
                 """;
         try {
             DatabaseManager.execute(sql);
-            System.out.println("[ArtistDAO] Tabla 'artists' verificada o creada correctamente.");
+            System.out.println("[ArtistDAO] Tabla 'artists' verificada.");
         } catch (Exception e) {
-            System.err.println("[ArtistDAO] Error al crear tabla 'artists': " + e.getMessage());
+            System.err.println("[ArtistDAO] Error al crear tabla: " + e.getMessage());
         }
     }
 
@@ -103,17 +102,14 @@ public class ArtistDAO implements GenericDAO<Artist> {
         String checkSql = "SELECT COUNT(*) AS total FROM artists";
         try (ResultSet rs = DatabaseManager.query(checkSql)) {
             if (rs != null && rs.next() && rs.getInt("total") == 0) {
-                System.out.println("[ArtistDAO] Insertando datos de prueba...");
-
                 String insertSql = """
-                            INSERT INTO artists (code, name) VALUES
-                            ('A001', 'The Rolling Stones'),
-                            ('A002', 'Coldplay'),
-                            ('A003', 'Adele')
+                        INSERT INTO artists (code, name) VALUES
+                        ('A001', 'The Rolling Stones'),
+                        ('A002', 'Coldplay'),
+                        ('A003', 'Adele')
                         """;
-
                 DatabaseManager.execute(insertSql);
-                System.out.println("[ArtistDAO] Datos de prueba insertados correctamente.");
+                System.out.println("[ArtistDAO] Datos de prueba insertados.");
             }
         } catch (SQLException e) {
             System.err.println("[ArtistDAO] Error al insertar datos de prueba: " + e.getMessage());

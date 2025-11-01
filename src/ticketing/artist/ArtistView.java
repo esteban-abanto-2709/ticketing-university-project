@@ -1,54 +1,55 @@
 package ticketing.artist;
 
-import java.util.List;
-
 import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;
 
+import java.util.List;
+
 public class ArtistView {
 
-    private static final ArtistController artistController = new ArtistController();
+    private static final ArtistController controller = new ArtistController();
 
     public static void showMenu() {
-        int opcion;
+        int option;
+
         do {
             ConsoleFormatter.printCentered(" GESTIÓN DE ARTISTAS ", "=");
-            System.out.println();
+            ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[1] Registrar Artista");
             ConsoleFormatter.printTabbed("[2] Mostrar Artistas");
             ConsoleFormatter.printTabbed("[3] Editar Artista");
             ConsoleFormatter.printTabbed("[4] Ver Detalle de Artista");
             ConsoleFormatter.printTabbed("[5] Eliminar Artista");
-            System.out.println();
+            ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[9] Volver al menú principal");
             ConsoleFormatter.printLine("-");
 
-            opcion = InputValidator.getIntInRange("Seleccione una opción: ", 1, 9);
+            option = InputValidator.getIntInRange("Seleccione una opción: ", 1, 9);
 
-            switch (opcion) {
+            switch (option) {
                 case 1 -> registerArtist();
-                case 2 -> mostrarArtistas();
+                case 2 -> showArtists();
                 case 3 -> updateArtist();
-                case 4 -> verDetalleArtista();
+                case 4 -> showDetail();
                 case 5 -> deleteArtist();
                 case 9 -> System.out.println("Regresando al menú principal...");
                 default -> System.out.println("Opción no válida.");
             }
 
-            if (opcion != 9) {
+            if (option != 9) {
                 InputValidator.pressEnterToContinue();
             }
 
-        } while (opcion != 9);
+        } while (option != 9);
     }
 
     private static void registerArtist() {
         ConsoleFormatter.printCentered(" REGISTRAR NUEVO ARTISTA ", "=");
-        System.out.println();
+        ConsoleFormatter.printLineBreak();
 
         String code = InputValidator.getCode("Ingrese código del artista: ");
 
-        if (artistController.isCodeAlreadyExists(code)) {
+        if (controller.exists(code)) {
             ConsoleFormatter.printError("Ya existe un artista con el código: " + code);
             return;
         }
@@ -58,10 +59,10 @@ public class ArtistView {
         Artist artist = new Artist(code);
         artist.setName(name);
 
-        mostrarResumenArtista(artist);
+        showSummary(artist);
 
         if (InputValidator.getConfirmation("¿Confirma el registro del artista?")) {
-            if (artistController.registerArtist(artist)) {
+            if (controller.register(artist)) {
                 ConsoleFormatter.printSuccess("Artista registrado exitosamente.");
             } else {
                 ConsoleFormatter.printError("No se pudo registrar el artista.");
@@ -71,36 +72,35 @@ public class ArtistView {
         }
     }
 
-    private static void mostrarArtistas() {
+    private static void showArtists() {
         ConsoleFormatter.printCentered(" LISTA DE ARTISTAS ", "=");
-        System.out.println();
+        ConsoleFormatter.printLineBreak();
 
-        if (!artistController.hasArtists()) {
+        if (!controller.hasArtists()) {
             ConsoleFormatter.printInfo("No hay artistas registrados.");
             return;
         }
 
-        List<Artist> artists = artistController.getAllArtists();
+        List<Artist> artists = controller.findAll();
         ConsoleFormatter.printList("Total de artistas", String.valueOf(artists.size()), " ");
         ConsoleFormatter.printLine("-");
 
         for (int i = 0; i < artists.size(); i++) {
-            Artist artist = artists.get(i);
-            ConsoleFormatter.printTabbed((i + 1) + ". " + artist.toString());
+            ConsoleFormatter.printTabbed((i + 1) + ". " + artists.get(i).toString());
         }
     }
 
     private static void updateArtist() {
         ConsoleFormatter.printCentered(" EDITAR ARTISTA ", "=");
-        System.out.println();
+        ConsoleFormatter.printLineBreak();
 
-        if (!artistController.hasArtists()) {
+        if (!controller.hasArtists()) {
             ConsoleFormatter.printInfo("No hay artistas registrados.");
             return;
         }
 
         String code = InputValidator.getCode("Ingrese código del artista a editar: ");
-        Artist artist = artistController.getArtistByCode(code);
+        Artist artist = controller.findByCode(code);
 
         if (artist == null) {
             ConsoleFormatter.printError("No se encontró un artista con el código: " + code);
@@ -108,11 +108,11 @@ public class ArtistView {
         }
 
         System.out.println("\nDatos actuales:");
-        mostrarResumenArtista(artist);
-        System.out.println();
+        showSummary(artist);
 
+        ConsoleFormatter.printLineBreak();
         ConsoleFormatter.printInfo("Ingrese los nuevos datos (o presione Enter para mantener el actual):");
-        System.out.println();
+        ConsoleFormatter.printLineBreak();
 
         String newName = InputValidator.getOptionalString("Nuevo nombre [" + artist.getName() + "]: ");
         if (!newName.isEmpty()) {
@@ -120,10 +120,10 @@ public class ArtistView {
         }
 
         System.out.println("\nNuevos datos:");
-        mostrarResumenArtista(artist);
+        showSummary(artist);
 
         if (InputValidator.getConfirmation("¿Confirma la edición del artista?")) {
-            if (artistController.updateArtist(artist)) {
+            if (controller.update(artist)) {
                 ConsoleFormatter.printSuccess("Artista actualizado exitosamente.");
             } else {
                 ConsoleFormatter.printError("No se pudo actualizar el artista.");
@@ -137,26 +137,26 @@ public class ArtistView {
         ConsoleFormatter.printCentered(" ELIMINAR ARTISTA ", "=");
         System.out.println();
 
-        if (!artistController.hasArtists()) {
+        if (!controller.hasArtists()) {
             ConsoleFormatter.printInfo("No hay artistas registrados.");
             return;
         }
 
-        String codigo = InputValidator.getCode("Ingrese código del artista a eliminar: ");
-        Artist artist = artistController.getArtistByCode(codigo);
+        String code = InputValidator.getCode("Ingrese código del artista a eliminar: ");
+        Artist artist = controller.findByCode(code);
 
         if (artist == null) {
-            ConsoleFormatter.printError("No se encontró un artista con el código: " + codigo);
+            ConsoleFormatter.printError("No se encontró un artista con el código: " + code);
             return;
         }
 
         System.out.println("\nArtista a eliminar:");
-        mostrarResumenArtista(artist);
+        showSummary(artist);
 
-        ConsoleFormatter.printWaring("Esta acción no se puede deshacer.");
+        ConsoleFormatter.printWarning("Esta acción no se puede deshacer.");
 
         if (InputValidator.getConfirmation("¿Está seguro de eliminar este artista?")) {
-            if (artistController.deleteArtist(codigo)) {
+            if (controller.delete(code)) {
                 ConsoleFormatter.printSuccess("Artista eliminado exitosamente.");
             } else {
                 ConsoleFormatter.printError("No se pudo eliminar el artista.");
@@ -166,26 +166,26 @@ public class ArtistView {
         }
     }
 
-    private static void verDetalleArtista() {
+    private static void showDetail() {
         ConsoleFormatter.printCentered(" DETALLE DE ARTISTA ", "=");
         System.out.println();
 
-        if (!artistController.hasArtists()) {
+        if (!controller.hasArtists()) {
             ConsoleFormatter.printInfo("No hay artistas registrados.");
             return;
         }
 
-        String codigo = InputValidator.getCode("Ingrese código del artista: ");
-        Artist artist = artistController.getArtistByCode(codigo);
+        String code = InputValidator.getCode("Ingrese código del artista: ");
+        Artist artist = controller.findByCode(code);
 
         if (artist == null) {
-            ConsoleFormatter.printError("No se encontró un artista con el código: " + codigo);
+            ConsoleFormatter.printError("No se encontró un artista con el código: " + code);
         } else {
-            mostrarResumenArtista(artist);
+            showSummary(artist);
         }
     }
 
-    private static void mostrarResumenArtista(Artist artist) {
+    private static void showSummary(Artist artist) {
         ConsoleFormatter.printLine("=");
         ConsoleFormatter.printList("Código", artist.getCode(), " ");
         ConsoleFormatter.printList("Nombre", artist.getName(), " ");

@@ -342,7 +342,7 @@ public class EventView {
         mostrarResumenEvento(evento);
         System.out.println();
 
-        ConsoleFormatter.printWaring("Esta acción no se puede deshacer.");
+        ConsoleFormatter.printWarning("Esta acción no se puede deshacer.");
 
         if (InputValidator.getConfirmation("¿Está seguro de cancelar este evento?")) {
             if (eventController.cancelarEvento(codigo)) {
