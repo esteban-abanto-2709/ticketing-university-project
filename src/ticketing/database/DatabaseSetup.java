@@ -19,6 +19,7 @@ public class DatabaseSetup {
         createArtistTable();
         createSponsorTable();
         createEventTable();
+        createZoneTable();
 
         ConsoleFormatter.printDebug("[DatabaseSetup] Tables verified or created successfully.");
     }
@@ -106,4 +107,25 @@ public class DatabaseSetup {
             System.err.println("[DatabaseSetup] Error creating table 'events': " + e.getMessage());
         }
     }
+
+    private static void createZoneTable() {
+        String sql = """
+                    CREATE TABLE IF NOT EXISTS zones (
+                        event_code VARCHAR(20) NOT NULL,
+                        name VARCHAR(100) NOT NULL,
+                        capacity INT NOT NULL,
+                        base_price DOUBLE NOT NULL,
+                        PRIMARY KEY (event_code, name),
+                        FOREIGN KEY (event_code) REFERENCES events(code)
+                    )
+                """;
+
+        try {
+            DatabaseManager.execute(sql);
+            ConsoleFormatter.printDebug("[DatabaseSetup] Table 'zones' verified or created successfully.");
+        } catch (Exception e) {
+            System.err.println("[DatabaseSetup] Error creating table 'zones': " + e.getMessage());
+        }
+    }
+
 }
