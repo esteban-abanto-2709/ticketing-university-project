@@ -14,6 +14,7 @@ public class DatabaseSetup {
 
         createLocalTable();
         createArtistTable();
+        createSponsorTable();
 
         System.out.println("[DatabaseSetup] Tablas verificadas o creadas correctamente.");
     }
@@ -33,13 +34,13 @@ public class DatabaseSetup {
 
     private static void createLocalTable() {
         String sql = """
-        CREATE TABLE IF NOT EXISTS locals (
-            code VARCHAR(20) PRIMARY KEY,
-            name VARCHAR(100) NOT NULL,
-            address VARCHAR(150),
-            capacity INT NOT NULL
-        )
-    """;
+                    CREATE TABLE IF NOT EXISTS locals (
+                        code VARCHAR(20) PRIMARY KEY,
+                        name VARCHAR(100) NOT NULL,
+                        address VARCHAR(150),
+                        capacity INT NOT NULL
+                    )
+                """;
         try {
             DatabaseManager.execute(sql);
             System.out.println("[DatabaseSetup] Tabla 'locals' verificada o creada correctamente.");
@@ -50,16 +51,33 @@ public class DatabaseSetup {
 
     private static void createArtistTable() {
         String sql = """
-            CREATE TABLE IF NOT EXISTS artists (
-                code VARCHAR(20) PRIMARY KEY,
-                name VARCHAR(100) NOT NULL
-            )
-        """;
+                    CREATE TABLE IF NOT EXISTS artists (
+                        code VARCHAR(20) PRIMARY KEY,
+                        name VARCHAR(100) NOT NULL
+                    )
+                """;
         try {
             DatabaseManager.execute(sql);
             System.out.println("[DatabaseSetup] Tabla 'artists' verificada o creada correctamente.");
         } catch (Exception e) {
             System.err.println("[DatabaseSetup] Error al crear tabla 'artists': " + e.getMessage());
+        }
+    }
+
+    private static void createSponsorTable() {
+        String sql = """
+                    CREATE TABLE IF NOT EXISTS sponsors (
+                        code VARCHAR(20) PRIMARY KEY,
+                        name VARCHAR(100) NOT NULL,
+                        phone VARCHAR(20),
+                        address VARCHAR(150)
+                    )
+                """;
+        try {
+            DatabaseManager.execute(sql);
+            System.out.println("[DatabaseSetup] Tabla 'sponsors' verificada o creada correctamente.");
+        } catch (Exception e) {
+            System.err.println("[DatabaseSetup] Error al crear tabla 'sponsors': " + e.getMessage());
         }
     }
 }
