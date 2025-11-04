@@ -1,4 +1,4 @@
-package ticketing;
+package ticketing.database;
 
 import java.sql.*;
 
@@ -23,10 +23,6 @@ import java.sql.*;
 
 public class DatabaseManager {
 
-    private static final String DB_NAME = "ticketing_db";
-    private static final String SERVER_URL = "jdbc:mysql://localhost:3306/";
-    private static final String USER = "root";
-    private static final String PASSWORD = "admin";
 
     private static Connection connection = null;
 
@@ -36,13 +32,11 @@ public class DatabaseManager {
     public static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                // Registrar driver
                 Class.forName("com.mysql.cj.jdbc.Driver");
 
-                // Conectarse directamente a la base (ya existente)
-                String URL = SERVER_URL + DB_NAME;
-                connection = DriverManager.getConnection(URL, USER, PASSWORD);
-                System.out.println("[DatabaseManager] Conexión establecida con " + DB_NAME);
+                String URL = DatabaseConfig.SERVER_URL + DatabaseConfig.DB_NAME;
+                connection = DriverManager.getConnection(URL, DatabaseConfig.USER, DatabaseConfig.PASSWORD);
+                System.out.println("[DatabaseManager] Conexión establecida con " + DatabaseConfig.DB_NAME);
             }
         } catch (Exception e) {
             System.err.println("[DatabaseManager] Error al conectar: " + e.getMessage());
@@ -91,23 +85,6 @@ public class DatabaseManager {
         } catch (SQLException e) {
             System.err.println("[DB] Error al ejecutar query: " + e.getMessage());
             return null;
-        }
-    }
-
-    // ------------------------------------------------------------
-    // 🔧 Métodos temporales para desarrollo (eliminar en producción)
-    // ------------------------------------------------------------
-
-    public static void createDatabaseIfNotExists() {
-        try (Connection conn = DriverManager.getConnection(SERVER_URL, USER, PASSWORD);
-             Statement stmt = conn.createStatement()) {
-
-            String sql = "CREATE DATABASE IF NOT EXISTS " + DB_NAME;
-            stmt.executeUpdate(sql);
-            System.out.println("[DatabaseManager] Base de datos verificada o creada correctamente.");
-
-        } catch (SQLException e) {
-            System.err.println("[DatabaseManager] No se pudo crear/verificar la base de datos: " + e.getMessage());
         }
     }
 }

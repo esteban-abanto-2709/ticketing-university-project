@@ -1,6 +1,6 @@
 package ticketing.artist;
 
-import ticketing.DatabaseManager;
+import ticketing.database.DatabaseManager;
 import ticketing.interfaces.GenericDAO;
 
 import java.sql.ResultSet;
@@ -76,43 +76,6 @@ public class ArtistDAO implements GenericDAO<Artist> {
         } catch (Exception e) {
             System.err.println("[ArtistDAO] Error al eliminar: " + e.getMessage());
             return false;
-        }
-    }
-
-    // ------------------------------------------------------------
-    // 🔧 Métodos temporales para desarrollo (eliminar en producción)
-    // ------------------------------------------------------------
-
-    public static void createTableIfNotExists() {
-        String sql = """
-                CREATE TABLE IF NOT EXISTS artists (
-                    code VARCHAR(20) PRIMARY KEY,
-                    name VARCHAR(100) NOT NULL
-                )
-                """;
-        try {
-            DatabaseManager.execute(sql);
-            System.out.println("[ArtistDAO] Tabla 'artists' verificada.");
-        } catch (Exception e) {
-            System.err.println("[ArtistDAO] Error al crear tabla: " + e.getMessage());
-        }
-    }
-
-    public static void insertSampleDataIfEmpty() {
-        String checkSql = "SELECT COUNT(*) AS total FROM artists";
-        try (ResultSet rs = DatabaseManager.query(checkSql)) {
-            if (rs != null && rs.next() && rs.getInt("total") == 0) {
-                String insertSql = """
-                        INSERT INTO artists (code, name) VALUES
-                        ('A001', 'The Rolling Stones'),
-                        ('A002', 'Coldplay'),
-                        ('A003', 'Adele')
-                        """;
-                DatabaseManager.execute(insertSql);
-                System.out.println("[ArtistDAO] Datos de prueba insertados.");
-            }
-        } catch (SQLException e) {
-            System.err.println("[ArtistDAO] Error al insertar datos de prueba: " + e.getMessage());
         }
     }
 }

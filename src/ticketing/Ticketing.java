@@ -1,16 +1,22 @@
 package ticketing;
 
-import ticketing.artist.ArtistDAO;
-import ticketing.utils.ConsoleFormatter;
+import ticketing.database.DatabaseManager;
+import ticketing.database.DatabaseSetup;
+import ticketing.database.SampleDataLoader;
+
 import ticketing.view.LocalView;
 import ticketing.artist.ArtistView;
 import ticketing.view.EventView;
 
+import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;
 
 public class Ticketing {
 
     public static void main(String[] args) {
+
+        DatabaseSetup.initializeDatabase();
+        SampleDataLoader.insertSampleData();
 
         int option;
 
@@ -47,13 +53,5 @@ public class Ticketing {
         } while (option != 9);
 
         DatabaseManager.closeConnection();
-    }
-
-    public static void setupConfig() {
-        DatabaseManager.createDatabaseIfNotExists();
-
-        ArtistDAO.createTableIfNotExists();
-
-        ArtistDAO.insertSampleDataIfEmpty();
     }
 }
