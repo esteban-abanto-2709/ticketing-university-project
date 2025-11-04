@@ -25,7 +25,7 @@ public class EventDAO implements GenericDAO<Event> {
                     entity.getStatus());
             return true;
         } catch (Exception e) {
-            System.err.println("[EventDAO] Error al guardar: " + e.getMessage());
+            System.err.println("[EventDAO] Error saving event: " + e.getMessage());
             return false;
         }
     }
@@ -38,7 +38,7 @@ public class EventDAO implements GenericDAO<Event> {
                 return mapResultSetToEvent(rs);
             }
         } catch (SQLException e) {
-            System.err.println("[EventDAO] Error al buscar: " + e.getMessage());
+            System.err.println("[EventDAO] Error finding event by code: " + e.getMessage());
         }
         return null;
     }
@@ -53,7 +53,7 @@ public class EventDAO implements GenericDAO<Event> {
                 events.add(mapResultSetToEvent(rs));
             }
         } catch (SQLException e) {
-            System.err.println("[EventDAO] Error al listar: " + e.getMessage());
+            System.err.println("[EventDAO] Error listing events: " + e.getMessage());
         }
 
         return events;
@@ -77,7 +77,7 @@ public class EventDAO implements GenericDAO<Event> {
                     entity.getCode());
             return true;
         } catch (Exception e) {
-            System.err.println("[EventDAO] Error al actualizar: " + e.getMessage());
+            System.err.println("[EventDAO] Error updating event: " + e.getMessage());
             return false;
         }
     }
@@ -89,7 +89,7 @@ public class EventDAO implements GenericDAO<Event> {
             DatabaseManager.execute(sql, code);
             return true;
         } catch (Exception e) {
-            System.err.println("[EventDAO] Error al eliminar: " + e.getMessage());
+            System.err.println("[EventDAO] Error deleting event: " + e.getMessage());
             return false;
         }
     }
@@ -106,7 +106,7 @@ public class EventDAO implements GenericDAO<Event> {
                     rs.getString("status")
             );
         } catch (SQLException e) {
-            System.err.println("[EventDAO] Error al mapear registro: " + e.getMessage());
+            System.err.println("[EventDAO] Error mapping event record: " + e.getMessage());
             return null;
         }
     }

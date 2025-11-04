@@ -1,5 +1,8 @@
 package ticketing.database;
 
+import ticketing.Config;
+import ticketing.utils.ConsoleFormatter;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,26 +13,26 @@ public class DatabaseSetup {
     public static void initializeDatabase() {
         createDatabaseIfNotExists();
 
-        System.out.println("[DatabaseSetup] Creando tablas si no existen...");
+        ConsoleFormatter.printDebug("[DatabaseSetup] Creating tables if they do not exist...");
 
         createLocalTable();
         createArtistTable();
         createSponsorTable();
         createEventTable();
 
-        System.out.println("[DatabaseSetup] Tablas verificadas o creadas correctamente.");
+        ConsoleFormatter.printDebug("[DatabaseSetup] Tables verified or created successfully.");
     }
 
     private static void createDatabaseIfNotExists() {
-        try (Connection conn = DriverManager.getConnection(DatabaseConfig.SERVER_URL, DatabaseConfig.USER, DatabaseConfig.PASSWORD);
+        try (Connection conn = DriverManager.getConnection(Config.SERVER_URL, Config.USER, Config.PASSWORD);
              Statement stmt = conn.createStatement()) {
 
-            String sql = "CREATE DATABASE IF NOT EXISTS " + DatabaseConfig.DB_NAME;
+            String sql = "CREATE DATABASE IF NOT EXISTS " + Config.DB_NAME;
             stmt.executeUpdate(sql);
-            System.out.println("[DatabaseSetup] Base de datos verificada o creada correctamente.");
+            ConsoleFormatter.printDebug("[DatabaseSetup] Database verified or created successfully.");
 
         } catch (SQLException e) {
-            System.err.println("[DatabaseSetup] No se pudo crear/verificar la base de datos: " + e.getMessage());
+            System.err.println("[DatabaseSetup] Failed to create/verify database: " + e.getMessage());
         }
     }
 
@@ -44,9 +47,9 @@ public class DatabaseSetup {
                 """;
         try {
             DatabaseManager.execute(sql);
-            System.out.println("[DatabaseSetup] Tabla 'locals' verificada o creada correctamente.");
+            ConsoleFormatter.printDebug("[DatabaseSetup] Table 'locals' verified or created successfully.");
         } catch (Exception e) {
-            System.err.println("[DatabaseSetup] Error al crear tabla 'locals': " + e.getMessage());
+            System.err.println("[DatabaseSetup] Error creating table 'locals': " + e.getMessage());
         }
     }
 
@@ -59,9 +62,9 @@ public class DatabaseSetup {
                 """;
         try {
             DatabaseManager.execute(sql);
-            System.out.println("[DatabaseSetup] Tabla 'artists' verificada o creada correctamente.");
+            ConsoleFormatter.printDebug("[DatabaseSetup] Table 'artists' verified or created successfully.");
         } catch (Exception e) {
-            System.err.println("[DatabaseSetup] Error al crear tabla 'artists': " + e.getMessage());
+            System.err.println("[DatabaseSetup] Error creating table 'artists': " + e.getMessage());
         }
     }
 
@@ -76,31 +79,31 @@ public class DatabaseSetup {
                 """;
         try {
             DatabaseManager.execute(sql);
-            System.out.println("[DatabaseSetup] Tabla 'sponsors' verificada o creada correctamente.");
+            ConsoleFormatter.printDebug("[DatabaseSetup] Table 'sponsors' verified or created successfully.");
         } catch (Exception e) {
-            System.err.println("[DatabaseSetup] Error al crear tabla 'sponsors': " + e.getMessage());
+            System.err.println("[DatabaseSetup] Error creating table 'sponsors': " + e.getMessage());
         }
     }
 
     private static void createEventTable() {
         String sql = """
-        CREATE TABLE IF NOT EXISTS events (
-            code VARCHAR(20) PRIMARY KEY,
-            name VARCHAR(100) NOT NULL,
-            description TEXT,
-            date VARCHAR(20) NOT NULL,
-            local_code VARCHAR(20) NOT NULL,
-            artist_code VARCHAR(20) NOT NULL,
-            status VARCHAR(30) DEFAULT 'PROGRAMADO',
-            FOREIGN KEY (local_code) REFERENCES locals(code),
-            FOREIGN KEY (artist_code) REFERENCES artists(code)
-        )
-    """;
+                    CREATE TABLE IF NOT EXISTS events (
+                        code VARCHAR(20) PRIMARY KEY,
+                        name VARCHAR(100) NOT NULL,
+                        description TEXT,
+                        date VARCHAR(20) NOT NULL,
+                        local_code VARCHAR(20) NOT NULL,
+                        artist_code VARCHAR(20) NOT NULL,
+                        status VARCHAR(30) DEFAULT 'PROGRAMADO',
+                        FOREIGN KEY (local_code) REFERENCES locals(code),
+                        FOREIGN KEY (artist_code) REFERENCES artists(code)
+                    )
+                """;
         try {
             DatabaseManager.execute(sql);
-            System.out.println("[DatabaseSetup] Tabla 'events' verificada o creada correctamente.");
+            ConsoleFormatter.printDebug("[DatabaseSetup] Table 'events' verified or created successfully.");
         } catch (Exception e) {
-            System.err.println("[DatabaseSetup] Error al crear tabla 'events': " + e.getMessage());
+            System.err.println("[DatabaseSetup] Error creating table 'events': " + e.getMessage());
         }
     }
 }

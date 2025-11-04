@@ -15,9 +15,14 @@ import ticketing.utils.InputValidator;
 public class Ticketing {
 
     public static void main(String[] args) {
+        
+        if (Config.AUTO_CREATE_DB_AND_TABLES) {
+            DatabaseSetup.initializeDatabase();
+        }
 
-        DatabaseSetup.initializeDatabase();
-        SampleDataLoader.insertSampleData();
+        if (Config.AUTO_LOAD_SAMPLE_DATA) {
+            SampleDataLoader.insertSampleData();
+        }
 
         int option;
 

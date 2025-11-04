@@ -18,7 +18,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
             DatabaseManager.execute(sql, entity.getCode(), entity.getName());
             return true;
         } catch (Exception e) {
-            System.err.println("[ArtistDAO] Error al guardar: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error saving artist: " + e.getMessage());
             return false;
         }
     }
@@ -33,7 +33,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
                 return artist;
             }
         } catch (SQLException e) {
-            System.err.println("[ArtistDAO] Error al buscar: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error finding artist: " + e.getMessage());
         }
         return null;
     }
@@ -50,7 +50,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
                 artists.add(artist);
             }
         } catch (SQLException e) {
-            System.err.println("[ArtistDAO] Error al listar: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error listing artists: " + e.getMessage());
         }
 
         return artists;
@@ -63,7 +63,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
             DatabaseManager.execute(sql, entity.getName(), entity.getCode());
             return true;
         } catch (Exception e) {
-            System.err.println("[ArtistDAO] Error al actualizar: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error updating artist: " + e.getMessage());
             return false;
         }
     }
@@ -75,7 +75,7 @@ public class ArtistDAO implements GenericDAO<Artist> {
             DatabaseManager.execute(sql, code);
             return true;
         } catch (Exception e) {
-            System.err.println("[ArtistDAO] Error al eliminar: " + e.getMessage());
+            System.err.println("[ArtistDAO] Error deleting artist: " + e.getMessage());
             return false;
         }
     }

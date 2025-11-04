@@ -1,28 +1,22 @@
 package ticketing.database;
 
+import ticketing.Config;
+import ticketing.utils.ConsoleFormatter;
+
 import java.sql.*;
 
 /**
- * DatabaseManager
- * ---------------------
- * Maneja la conexión general a la base de datos MySQL.
- * <p>
- * 🔧 NOTA: Si MySQL no arranca automáticamente en Windows,
- * puedes iniciarlo manualmente con:
- * <p>
+ * Note:
+ * If MySQL does not start automatically on Windows, you can start it manually with:
  * net start MySQL80
  * <p>
- * Para verificar que está corriendo:
- * <p>
+ * To verify that it is running:
  * netstat -ano | find "3306"
  * <p>
- * Si luego deseas detenerlo:
- * <p>
+ * To stop it:
  * net stop MySQL80
  */
-
 public class DatabaseManager {
-
 
     private static Connection connection = null;
 
@@ -34,12 +28,13 @@ public class DatabaseManager {
             if (connection == null || connection.isClosed()) {
                 Class.forName("com.mysql.cj.jdbc.Driver");
 
-                String URL = DatabaseConfig.SERVER_URL + DatabaseConfig.DB_NAME;
-                connection = DriverManager.getConnection(URL, DatabaseConfig.USER, DatabaseConfig.PASSWORD);
-                System.out.println("[DatabaseManager] Conexión establecida con " + DatabaseConfig.DB_NAME);
+                String URL = Config.SERVER_URL + Config.DB_NAME;
+                connection = DriverManager.getConnection(URL, Config.USER, Config.PASSWORD);
+
+                ConsoleFormatter.printDebug("[DatabaseManager] Connection established with " + Config.DB_NAME);
             }
         } catch (Exception e) {
-            System.err.println("[DatabaseManager] Error al conectar: " + e.getMessage());
+            System.err.println("[DatabaseManager] Critical connection error: " + e.getMessage());
         }
         return connection;
     }
@@ -48,9 +43,9 @@ public class DatabaseManager {
         if (connection != null) {
             try {
                 connection.close();
-                System.out.println("[DatabaseManager] Conexión cerrada correctamente.");
+                ConsoleFormatter.printDebug("[DatabaseManager] Connection closed successfully.");
             } catch (SQLException e) {
-                System.err.println("[DatabaseManager] Error al cerrar la conexión: " + e.getMessage());
+                System.err.println("[DatabaseManager] Error closing connection: " + e.getMessage());
             }
         }
     }
@@ -64,8 +59,9 @@ public class DatabaseManager {
             }
 
             stmt.executeUpdate();
+            ConsoleFormatter.printDebug("[DatabaseManager] SQL executed successfully: " + sql);
         } catch (SQLException e) {
-            System.err.println("[DB] Error al ejecutar consulta: " + e.getMessage());
+            System.err.println("[DatabaseManager] SQL execution error: " + e.getMessage());
         }
     }
 
@@ -78,12 +74,12 @@ public class DatabaseManager {
                 stmt.setObject(i + 1, params[i]);
             }
 
-            // ✅ Cierra el statement automáticamente cuando se cierre el ResultSet
-            stmt.closeOnCompletion();
+            stmt.closeOnCompletion(); // closes stmt automatically after ResultSet
 
+            ConsoleFormatter.printDebug("[DatabaseManager] Query executed: " + sql);
             return stmt.executeQuery();
         } catch (SQLException e) {
-            System.err.println("[DB] Error al ejecutar query: " + e.getMessage());
+            System.err.println("[DatabaseManager] Query execution error: " + e.getMessage());
             return null;
         }
     }

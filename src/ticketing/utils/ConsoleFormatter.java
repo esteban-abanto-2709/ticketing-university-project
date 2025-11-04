@@ -1,5 +1,7 @@
 package ticketing.utils;
 
+import ticketing.Config;
+
 public class ConsoleFormatter {
 
     private static final int MAX_WIDTH = 60;
@@ -47,8 +49,8 @@ public class ConsoleFormatter {
         int usedSpace = leftWithTab.length() + rightWithTab.length();
 
         if (usedSpace >= MAX_WIDTH) {
-            String result = leftWithTab + rightWithTab;
-            System.out.println(result.substring(0, MAX_WIDTH));
+            // If too long, print trimmed text
+            System.out.println((leftWithTab + " " + rightWithTab).substring(0, MAX_WIDTH));
             return;
         }
 
@@ -63,7 +65,7 @@ public class ConsoleFormatter {
     }
 
     public static void printWarning(String message) {
-        System.out.println("[Waring]: " + message);
+        System.out.println("[Warning]: " + message);
     }
 
     public static void printInfo(String message) {
@@ -72,6 +74,11 @@ public class ConsoleFormatter {
 
     public static void printSuccess(String message) {
         System.out.println("[Success]: " + message);
+    }
+
+    public static void printDebug(String message) {
+        if (!Config.SHOW_DEBUG_LOGS) return;
+        System.out.println(message);
     }
 
     public static void printLineBreak(int count) {

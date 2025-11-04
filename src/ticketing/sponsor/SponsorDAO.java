@@ -21,10 +21,9 @@ public class SponsorDAO implements GenericDAO<Sponsor> {
                     sponsor.getPhone(),
                     sponsor.getAddress()
             );
-            System.out.println("[SponsorDAO] Auspiciador guardado: " + sponsor.getName());
             return true;
         } catch (Exception e) {
-            System.err.println("[SponsorDAO] Error al guardar: " + e.getMessage());
+            System.err.println("[SponsorDAO] Error saving sponsor: " + e.getMessage());
             return false;
         }
     }
@@ -42,7 +41,7 @@ public class SponsorDAO implements GenericDAO<Sponsor> {
                 );
             }
         } catch (SQLException e) {
-            System.err.println("[SponsorDAO] Error al buscar: " + e.getMessage());
+            System.err.println("[SponsorDAO] Error finding sponsor by code: " + e.getMessage());
         }
         return null;
     }
@@ -61,7 +60,7 @@ public class SponsorDAO implements GenericDAO<Sponsor> {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("[SponsorDAO] Error al listar: " + e.getMessage());
+            System.err.println("[SponsorDAO] Error listing sponsors: " + e.getMessage());
         }
         return sponsors;
     }
@@ -78,7 +77,7 @@ public class SponsorDAO implements GenericDAO<Sponsor> {
             );
             return true;
         } catch (Exception e) {
-            System.err.println("[SponsorDAO] Error al actualizar: " + e.getMessage());
+            System.err.println("[SponsorDAO] Error updating sponsor: " + e.getMessage());
             return false;
         }
     }
@@ -90,7 +89,7 @@ public class SponsorDAO implements GenericDAO<Sponsor> {
             DatabaseManager.execute(sql, code);
             return true;
         } catch (Exception e) {
-            System.err.println("[SponsorDAO] Error al eliminar: " + e.getMessage());
+            System.err.println("[SponsorDAO] Error deleting sponsor: " + e.getMessage());
             return false;
         }
     }

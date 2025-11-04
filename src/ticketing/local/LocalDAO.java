@@ -21,10 +21,9 @@ public class LocalDAO implements GenericDAO<Local> {
                     local.getAddress(),
                     local.getCapacity()
             );
-            System.out.println("[LocalDAO] Local guardado correctamente: " + local.getName());
             return true;
         } catch (Exception e) {
-            System.err.println("[LocalDAO] Error al guardar local: " + e.getMessage());
+            System.err.println("[LocalDAO] Error saving local: " + e.getMessage());
             return false;
         }
     }
@@ -42,7 +41,7 @@ public class LocalDAO implements GenericDAO<Local> {
                 );
             }
         } catch (SQLException e) {
-            System.err.println("[LocalDAO] Error al buscar local por código: " + e.getMessage());
+            System.err.println("[LocalDAO] Error finding local by code: " + e.getMessage());
         }
         return null;
     }
@@ -61,7 +60,7 @@ public class LocalDAO implements GenericDAO<Local> {
                 ));
             }
         } catch (SQLException e) {
-            System.err.println("[LocalDAO] Error al listar locales: " + e.getMessage());
+            System.err.println("[LocalDAO] Error listing locals: " + e.getMessage());
         }
         return locales;
     }
@@ -78,7 +77,7 @@ public class LocalDAO implements GenericDAO<Local> {
             );
             return true;
         } catch (Exception e) {
-            System.err.println("[LocalDAO] Error al actualizar local: " + e.getMessage());
+            System.err.println("[LocalDAO] Error updating local: " + e.getMessage());
             return false;
         }
     }
@@ -90,7 +89,7 @@ public class LocalDAO implements GenericDAO<Local> {
             DatabaseManager.execute(sql, code);
             return true;
         } catch (Exception e) {
-            System.err.println("[LocalDAO] Error al eliminar local: " + e.getMessage());
+            System.err.println("[LocalDAO] Error deleting local: " + e.getMessage());
             return false;
         }
     }
