@@ -24,6 +24,6 @@ public class Sponsor {
 
     @Override
     public String toString() {
-        return name + " (" + code + ")";
+        return "[" + code + "] " + name;
     }
 }
