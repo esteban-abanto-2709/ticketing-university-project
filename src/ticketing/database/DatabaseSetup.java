@@ -15,6 +15,7 @@ public class DatabaseSetup {
         createLocalTable();
         createArtistTable();
         createSponsorTable();
+        createEventTable();
 
         System.out.println("[DatabaseSetup] Tablas verificadas o creadas correctamente.");
     }
@@ -78,6 +79,28 @@ public class DatabaseSetup {
             System.out.println("[DatabaseSetup] Tabla 'sponsors' verificada o creada correctamente.");
         } catch (Exception e) {
             System.err.println("[DatabaseSetup] Error al crear tabla 'sponsors': " + e.getMessage());
+        }
+    }
+
+    private static void createEventTable() {
+        String sql = """
+        CREATE TABLE IF NOT EXISTS events (
+            code VARCHAR(20) PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            description TEXT,
+            date VARCHAR(20) NOT NULL,
+            local_code VARCHAR(20) NOT NULL,
+            artist_code VARCHAR(20) NOT NULL,
+            status VARCHAR(30) DEFAULT 'PROGRAMADO',
+            FOREIGN KEY (local_code) REFERENCES locals(code),
+            FOREIGN KEY (artist_code) REFERENCES artists(code)
+        )
+    """;
+        try {
+            DatabaseManager.execute(sql);
+            System.out.println("[DatabaseSetup] Tabla 'events' verificada o creada correctamente.");
+        } catch (Exception e) {
+            System.err.println("[DatabaseSetup] Error al crear tabla 'events': " + e.getMessage());
         }
     }
 }

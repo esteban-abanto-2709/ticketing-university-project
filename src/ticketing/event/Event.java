@@ -1,37 +1,25 @@
 package ticketing.event;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
-
 public class Event {
+    private final String code;     // identificador único
+    private String name;           // nombre del evento
+    private String description;    // descripción opcional
+    private String date;           // fecha del evento
+    private String localCode;      // FK - local donde se realiza
+    private String artistCode;     // FK - artista o grupo
+    private String status;         // estado del evento (programado, cancelado, etc.)
 
-    private final String code;
-    private String name;
-    private String artista;
-    private String codeLocal;
-    private LocalDate fecha;
-    private LocalTime hora;
-    private EventStatus estado;
-    private String descripcion;
-
-    public Event(String code) {
-        this.code = code;
-        this.estado = EventStatus.PROGRAMADO;
-    }
-
-    public Event(String code, String name, String artista, String codeLocal,
-                 LocalDate fecha, LocalTime hora, String descripcion) {
+    public Event(String code, String name, String description, String date,
+                 String localCode, String artistCode, String status) {
         this.code = code;
         this.name = name;
-        this.artista = artista;
-        this.codeLocal = codeLocal;
-        this.fecha = fecha;
-        this.hora = hora;
-        this.estado = EventStatus.PROGRAMADO;
-        this.descripcion = descripcion;
+        this.description = description;
+        this.date = date;
+        this.localCode = localCode;
+        this.artistCode = artistCode;
+        this.status = status;
     }
 
-    // --- Getters ---
     public String getCode() {
         return code;
     }
@@ -40,73 +28,52 @@ public class Event {
         return name;
     }
 
-    public String getArtista() {
-        return artista;
+    public String getDescription() {
+        return description;
     }
 
-    public String getCodeLocal() {
-        return codeLocal;
+    public String getDate() {
+        return date;
     }
 
-    public LocalDate getFecha() {
-        return fecha;
+    public String getLocalCode() {
+        return localCode;
     }
 
-    public LocalTime getHora() {
-        return hora;
+    public String getArtistCode() {
+        return artistCode;
     }
 
-    public EventStatus getEstado() {
-        return estado;
+    public String getStatus() {
+        return status;
     }
 
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    // --- Setters (excepto código) ---
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setArtista(String artista) {
-        this.artista = artista;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setCodeLocal(String codeLocal) {
-        this.codeLocal = codeLocal;
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public void setFecha(LocalDate fecha) {
-        this.fecha = fecha;
+    public void setLocalCode(String localCode) {
+        this.localCode = localCode;
     }
 
-    public void setHora(LocalTime hora) {
-        this.hora = hora;
+    public void setArtistCode(String artistCode) {
+        this.artistCode = artistCode;
     }
 
-    public void setEstado(EventStatus estado) {
-        this.estado = estado;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-
-    // --- Métodos de lógica ---
-    public boolean isActivo() {
-        return estado == EventStatus.PROGRAMADO || estado == EventStatus.REPROGRAMADO;
-    }
-
-    public boolean puedeSerReprogramado() {
-        return estado == EventStatus.PROGRAMADO || estado == EventStatus.REPROGRAMADO;
-    }
-
-    public boolean puedeSerCancelado() {
-        return estado != EventStatus.REALIZADO && estado != EventStatus.CANCELADO;
-    }
-
-    public boolean puedeSerFinalizado() {
-        return estado == EventStatus.PROGRAMADO || estado == EventStatus.REPROGRAMADO;
+    @Override
+    public String toString() {
+        return "[" + code + "] " + name + " (" + status + ") - " + date;
     }
 }

@@ -9,6 +9,7 @@ public class SampleDataLoader {
         insertSampleLocals();
         insertSampleArtists();
         insertSampleSponsors();
+        insertSampleEvents();
     }
 
     private static void insertSampleLocals() {
@@ -64,4 +65,24 @@ public class SampleDataLoader {
             System.err.println("[SampleDataLoader] Error al insertar datos de prueba de sponsors: " + e.getMessage());
         }
     }
+
+    private static void insertSampleEvents() {
+        String checkSql = "SELECT COUNT(*) AS total FROM events";
+        try (ResultSet rs = DatabaseManager.query(checkSql)) {
+            if (rs != null && rs.next() && rs.getInt("total") == 0) {
+                String insertSql = """
+                        INSERT INTO events (code, name, description, date, local_code, artist_code, status) VALUES
+                        ('E001', 'Rock Legends Night', 'Concierto especial con The Rolling Stones.', '2025-12-15', 'L001', 'A001', 'ACTIVO'),
+                        ('E002', 'Viva la Vida Tour', 'Coldplay en vivo con su gira mundial.', '2025-11-20', 'L002', 'A002', 'ACTIVO'),
+                        ('E003', 'Adele Live Experience', 'Show íntimo de Adele con orquesta.', '2025-12-05', 'L003', 'A003', 'ACTIVO'),
+                        ('E004', 'Classic Encore', 'Coldplay y Adele en presentación benéfica.', '2026-01-10', 'L002', 'A002', 'PENDIENTE')
+                    """;
+                DatabaseManager.execute(insertSql);
+                System.out.println("[SampleDataLoader] Datos de prueba para 'events' insertados.");
+            }
+        } catch (SQLException e) {
+            System.err.println("[SampleDataLoader] Error al insertar datos de prueba para 'events': " + e.getMessage());
+        }
+    }
+
 }

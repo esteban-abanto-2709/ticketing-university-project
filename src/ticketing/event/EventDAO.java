@@ -1,95 +1,113 @@
 package ticketing.event;
 
+import ticketing.database.DatabaseManager;
+import ticketing.interfaces.GenericDAO;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class EventDAO {
+public class EventDAO implements GenericDAO<Event> {
 
-    private static List<Event> events = new ArrayList<>();
-
-    public boolean save(Event event) {
-        // Verificar que el código no exista
-        if (existsByCode(event.getCode())) {
+    @Override
+    public boolean save(Event entity) {
+        String sql = "INSERT INTO events (code, name, description, date, local_code, artist_code, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try {
+            DatabaseManager.execute(sql,
+                    entity.getCode(),
+                    entity.getName(),
+                    entity.getDescription(),
+                    entity.getDate(),
+                    entity.getLocalCode(),
+                    entity.getArtistCode(),
+                    entity.getStatus());
+            return true;
+        } catch (Exception e) {
+            System.err.println("[EventDAO] Error al guardar: " + e.getMessage());
             return false;
         }
-        return events.add(event);
     }
 
-    public List<Event> findAll() {
-        // Retorna copia para evitar modificaciones
-        return new ArrayList<>(events);
-    }
-
+    @Override
     public Event findByCode(String code) {
-        for (Event event : events) {
-            if (event.getCode().equalsIgnoreCase(code)) {
-                return event;
+        String sql = "SELECT * FROM events WHERE code = ?";
+        try (ResultSet rs = DatabaseManager.query(sql, code)) {
+            if (rs != null && rs.next()) {
+                return mapResultSetToEvent(rs);
             }
+        } catch (SQLException e) {
+            System.err.println("[EventDAO] Error al buscar: " + e.getMessage());
         }
         return null;
     }
 
-    public List<Event> findByCodigoLocal(String codigoLocal) {
-        List<Event> result = new ArrayList<>();
-        for (Event event : events) {
-            if (event.getCodeLocal().equalsIgnoreCase(codigoLocal)) {
-                result.add(event);
+    @Override
+    public List<Event> findAll() {
+        String sql = "SELECT * FROM events";
+        List<Event> events = new ArrayList<>();
+
+        try (ResultSet rs = DatabaseManager.query(sql)) {
+            while (rs != null && rs.next()) {
+                events.add(mapResultSetToEvent(rs));
             }
+        } catch (SQLException e) {
+            System.err.println("[EventDAO] Error al listar: " + e.getMessage());
         }
-        return result;
+
+        return events;
     }
 
-    public List<Event> findByEstado(EventStatus estado) {
-        List<Event> result = new ArrayList<>();
-        for (Event event : events) {
-            if (event.getEstado() == estado) {
-                result.add(event);
-            }
+    @Override
+    public boolean update(Event entity) {
+        String sql = """
+                    UPDATE events
+                    SET name = ?, description = ?, date = ?, local_code = ?, artist_code = ?, status = ?
+                    WHERE code = ?
+                """;
+        try {
+            DatabaseManager.execute(sql,
+                    entity.getName(),
+                    entity.getDescription(),
+                    entity.getDate(),
+                    entity.getLocalCode(),
+                    entity.getArtistCode(),
+                    entity.getStatus(),
+                    entity.getCode());
+            return true;
+        } catch (Exception e) {
+            System.err.println("[EventDAO] Error al actualizar: " + e.getMessage());
+            return false;
         }
-        return result;
     }
 
-    public List<Event> findByName(String name) {
-        List<Event> result = new ArrayList<>();
-        String searchName = name.toLowerCase();
-
-        for (Event event : events) {
-            if (event.getName().toLowerCase().contains(searchName)) {
-                result.add(event);
-            }
-        }
-        return result;
-    }
-
-    public boolean existsByCode(String code) {
-        return findByCode(code) != null;
-    }
-
-    public boolean update(Event event) {
-        for (int i = 0; i < events.size(); i++) {
-            if (events.get(i).getCode().equalsIgnoreCase(event.getCode())) {
-                events.set(i, event);
-                return true;
-            }
-        }
-        return false;
-    }
-
+    @Override
     public boolean deleteByCode(String code) {
-        return events.removeIf(event -> event.getCode().equalsIgnoreCase(code));
-    }
-
-    public int count() {
-        return events.size();
-    }
-
-    public int countByEstado(EventStatus estado) {
-        int count = 0;
-        for (Event event : events) {
-            if (event.getEstado() == estado) {
-                count++;
-            }
+        String sql = "DELETE FROM events WHERE code = ?";
+        try {
+            DatabaseManager.execute(sql, code);
+            return true;
+        } catch (Exception e) {
+            System.err.println("[EventDAO] Error al eliminar: " + e.getMessage());
+            return false;
         }
-        return count;
+    }
+
+    private Event mapResultSetToEvent(ResultSet rs) {
+        try {
+            return new Event(
+                    rs.getString("code"),
+                    rs.getString("name"),
+                    rs.getString("description"),
+                    rs.getString("date"),
+                    rs.getString("local_code"),
+                    rs.getString("artist_code"),
+                    rs.getString("status")
+            );
+        } catch (SQLException e) {
+            System.err.println("[EventDAO] Error al mapear registro: " + e.getMessage());
+            return null;
+        }
     }
 }

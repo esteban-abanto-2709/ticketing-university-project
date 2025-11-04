@@ -44,7 +44,7 @@ public class Ticketing {
                 case 1 -> LocalView.showMenu();
                 case 2 -> ArtistView.showMenu();
                 case 3 -> SponsorView.showMenu();
-                case 4 -> EventView.mostrarMenu();
+                case 4 -> EventView.showMenu();
                 case 5 -> System.out.println("Módulo de Entradas aún no implementado.");
                 case 6 -> System.out.println("Módulo de Ventas aún no implementado.");
                 case 7 -> System.out.println("Módulo de Reportes aún no implementado.");
