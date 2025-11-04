@@ -4,7 +4,7 @@ import ticketing.database.DatabaseManager;
 import ticketing.database.DatabaseSetup;
 import ticketing.database.SampleDataLoader;
 
-import ticketing.view.LocalView;
+import ticketing.local.LocalView;
 import ticketing.artist.ArtistView;
 import ticketing.view.EventView;
 
@@ -40,7 +40,7 @@ public class Ticketing {
             option = InputValidator.getIntInRange("Seleccione una opción: ", 1, 9);
 
             switch (option) {
-                case 1 -> LocalView.mostrarMenu();
+                case 1 -> LocalView.showMenu();
                 case 2 -> ArtistView.showMenu();
                 case 3 -> EventView.mostrarMenu();
                 case 4 -> System.out.println("Módulo de Entradas aún no implementado.");

@@ -28,6 +28,23 @@ public class InputValidator {
         return value;
     }
 
+    public static int getIntMin(String message, int min) {
+        int value;
+        while (true) {
+            System.out.print(message);
+            try {
+                value = Integer.parseInt(scanner.nextLine());
+                if (value >= min) {
+                    break;
+                }
+                System.out.println("El número debe ser mayor o igual a " + min + ".");
+            } catch (NumberFormatException e) {
+                System.out.println("Debe ingresar un número entero válido.");
+            }
+        }
+        return value;
+    }
+
     // Pide un string no vacío
     public static String getNonEmptyString(String message) {
         String value;

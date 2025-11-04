@@ -2,20 +2,20 @@ package ticketing.controller;
 
 import java.util.List;
 import ticketing.dao.interfaces.EventDAO;
-import ticketing.dao.interfaces.LocalDAO;
 import ticketing.dao.temporary.EventDAOTemporary;
-import ticketing.dao.temporary.LocalDAOTemporary;
+import ticketing.local.LocalController;
+import ticketing.local.LocalDAO;
 import ticketing.entities.Event;
 import ticketing.entities.EventStatus;
 
 public class EventController {
 
     private final EventDAO eventDAO;
-    private final LocalDAO localDAO;
+    private final LocalController localController;
 
     public EventController() {
         this.eventDAO = new EventDAOTemporary();
-        this.localDAO = new LocalDAOTemporary();
+        this.localController = new LocalController();
     }
 
     // Registrar un nuevo evento con validaciones
@@ -46,7 +46,7 @@ public class EventController {
         }
 
         // Verificar que el local existe
-        if (!localDAO.existsByCode(event.getCodeLocal().trim())) {
+        if (!localController.exists(event.getCodeLocal().trim())) {
             return false;
         }
 
@@ -106,7 +106,7 @@ public class EventController {
 
         // Verificar que el local existe si se cambió
         if (event.getCodeLocal() != null && !event.getCodeLocal().trim().isEmpty()) {
-            if (!localDAO.existsByCode(event.getCodeLocal().trim())) {
+            if (!localController.exists(event.getCodeLocal().trim())) {
                 return false;
             }
         }
@@ -204,16 +204,12 @@ public class EventController {
         if (codigoLocal == null || codigoLocal.trim().isEmpty()) {
             return false;
         }
-        return localDAO.existsByCode(codigoLocal.trim());
+        return localController.exists(codigoLocal.trim());
     }
 
-    // Obtener estadísticas de locales
-    public int getTotalLocals() {
-        return localDAO.count();
-    }
 
     // Verificar si hay locales registrados
     public boolean hasLocals() {
-        return getTotalLocals() > 0;
+        return localController.hasLocals();
     }
 }
