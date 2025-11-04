@@ -1,6 +1,8 @@
 package ticketing.event;
 
+import ticketing.artist.Artist;
 import ticketing.artist.ArtistController;
+import ticketing.local.Local;
 import ticketing.local.LocalController;
 import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;
@@ -73,14 +75,14 @@ public class EventView {
 
         ConsoleFormatter.printLineBreak();
         ConsoleFormatter.printInfo("Seleccione el LOCAL para este evento:");
-        List<String> localOptions = localController.findAll().stream().map(l -> l.getCode()).toList();
-        localOptions.forEach(codeLocal -> ConsoleFormatter.printTabbed("- " + codeLocal));
+        List<Local> locals = localController.findAll();
+        locals.forEach(local -> ConsoleFormatter.printTabbed("- " + local));
         String localCode = InputValidator.getCode("Ingrese código del local: ");
 
         ConsoleFormatter.printLineBreak();
         ConsoleFormatter.printInfo("Seleccione el ARTISTA principal:");
-        List<String> artistOptions = artistController.findAll().stream().map(a -> a.getCode()).toList();
-        artistOptions.forEach(codeArtist -> ConsoleFormatter.printTabbed("- " + codeArtist));
+        List<Artist> artists = artistController.findAll();
+        artists.forEach(artist -> ConsoleFormatter.printTabbed("- " + artist));
         String artistCode = InputValidator.getCode("Ingrese código del artista: ");
 
         String status = InputValidator.getNonEmptyString("Ingrese estado del evento (ejemplo: ACTIVO / CANCELADO / FINALIZADO): ");
