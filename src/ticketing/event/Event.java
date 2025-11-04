@@ -1,4 +1,4 @@
-package ticketing.entities;
+package ticketing.event;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

@@ -1,4 +1,4 @@
-package ticketing.entities;
+package ticketing.event;
 
 public enum EventStatus {
     PROGRAMADO("Programado"),

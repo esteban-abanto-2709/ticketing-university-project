@@ -1,13 +1,10 @@
-package ticketing.view;
+package ticketing.event;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import ticketing.controller.EventController;
-import ticketing.entities.Event;
-import ticketing.entities.EventStatus;
 import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;
 

@@ -6,7 +6,7 @@ import ticketing.database.SampleDataLoader;
 
 import ticketing.local.LocalView;
 import ticketing.artist.ArtistView;
-import ticketing.view.EventView;
+import ticketing.event.EventView;
 
 import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;

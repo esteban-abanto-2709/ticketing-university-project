@@ -1,12 +1,8 @@
-package ticketing.controller;
+package ticketing.event;
 
 import java.util.List;
-import ticketing.dao.interfaces.EventDAO;
-import ticketing.dao.temporary.EventDAOTemporary;
+
 import ticketing.local.LocalController;
-import ticketing.local.LocalDAO;
-import ticketing.entities.Event;
-import ticketing.entities.EventStatus;
 
 public class EventController {
 
@@ -14,7 +10,7 @@ public class EventController {
     private final LocalController localController;
 
     public EventController() {
-        this.eventDAO = new EventDAOTemporary();
+        this.eventDAO = new EventDAO();
         this.localController = new LocalController();
     }
 
