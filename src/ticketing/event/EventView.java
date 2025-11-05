@@ -46,6 +46,7 @@ public class EventView {
             ConsoleFormatter.printTabbed("[5] Eliminar Evento");
             ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[6] Gestión de Zonas");
+            ConsoleFormatter.printTabbed("[7] Gestión de Tipos de Entrada");
             ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[9] Volver al menú principal");
             ConsoleFormatter.printLine("-");
@@ -105,9 +106,7 @@ public class EventView {
             return;
         }
 
-        String status = InputValidator.getNonEmptyString("Estado del evento (ACTIVO / CANCELADO / FINALIZADO): ");
-
-        Event event = new Event(code, name, description, date.toString(), localCode, artistCode, status);
+        Event event = new Event(code, name, description, date, localCode, artistCode);
 
         if (!InputValidator.getConfirmation("¿Confirmar registro del evento?")) {
             ConsoleFormatter.printInfo("Registro cancelado.");
@@ -166,11 +165,11 @@ public class EventView {
         String newName = InputValidator.getOptionalString("Nuevo nombre [" + event.getName() + "]: ");
         if (!newName.isEmpty()) event.setName(newName);
 
-        String newDate = InputValidator.getOptionalString("Nueva fecha [" + event.getDate() + "]: ");
-        if (!newDate.isEmpty()) event.setDate(newDate);
+        String newDescription = InputValidator.getOptionalString("Nueva descripcion [" + event.getDescription() + "]: ");
+        if (!newName.isEmpty()) event.setDescription(newDescription);
 
-        String newStatus = InputValidator.getOptionalString("Nuevo estado [" + event.getStatus() + "]: ");
-        if (!newStatus.isEmpty()) event.setStatus(newStatus);
+        LocalDate newDate = InputValidator.getLATAMDate("Nueva fecha [" + event.getDate() + "]: ");
+        if (newDate != null) event.setDate(newDate);
 
         ConsoleFormatter.printInfo("Datos actualizados:");
         showSummary(event);
@@ -255,10 +254,9 @@ public class EventView {
         ConsoleFormatter.printTabbed(event.getDescription());
         ConsoleFormatter.printLine("=");
 
-        ConsoleFormatter.printList("Fecha", event.getDate(), " ");
+        ConsoleFormatter.printList("Fecha", event.getDate().toString(), " ");
         ConsoleFormatter.printList("Local", event.getLocalCode(), " ");
         ConsoleFormatter.printList("Artista", event.getArtistCode(), " ");
-        ConsoleFormatter.printList("Estado", event.getStatus(), " ");
         ConsoleFormatter.printLine("=");
 
         List<Zone> zones = zoneController.findByEvent(event.getCode());

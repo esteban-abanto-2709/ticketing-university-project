@@ -12,6 +12,7 @@ public class SampleDataLoader {
         insertSampleArtists();
         insertSampleSponsors();
         insertSampleEvents();
+        insertSampleZones();
     }
 
     private static void insertSampleLocals() {
@@ -79,11 +80,11 @@ public class SampleDataLoader {
         try (ResultSet rs = DatabaseManager.query(checkSql)) {
             if (rs != null && rs.next() && rs.getInt("total") == 0) {
                 String insertSql = """
-                        INSERT INTO events (code, name, description, date, local_code, artist_code, status) VALUES
-                        ('E001', 'Noche de Leyendas del Rock', 'Concierto especial con The Rolling Stones.', '2025-12-15', 'L001', 'A001', 'ACTIVO'),
-                        ('E002', 'Viva la Vida Tour', 'Coldplay en vivo con su gira mundial.', '2025-11-20', 'L002', 'A002', 'ACTIVO'),
-                        ('E003', 'Adele Live Experience', 'Show íntimo de Adele con orquesta.', '2025-12-05', 'L003', 'A003', 'ACTIVO'),
-                        ('E004', 'Clásicos por una Causa', 'Presentación benéfica de Coldplay y Adele.', '2026-01-10', 'L002', 'A002', 'PENDIENTE')
+                        INSERT INTO events (code, name, description, date, local_code, artist_code) VALUES
+                        ('E001', 'Noche de Leyendas del Rock', 'Concierto especial con The Rolling Stones.', '2025-12-15', 'L001', 'A001'),
+                        ('E002', 'Viva la Vida Tour', 'Coldplay en vivo con su gira mundial.', '2025-11-20', 'L002', 'A002'),
+                        ('E003', 'Adele Live Experience', 'Show íntimo de Adele con orquesta.', '2025-12-05', 'L003', 'A003'),
+                        ('E004', 'Clásicos por una Causa', 'Presentación benéfica de Coldplay y Adele.', '2026-01-10', 'L002', 'A002')
                         """;
                 DatabaseManager.execute(insertSql);
                 ConsoleFormatter.printDebug("[SampleDataLoader] Sample data for 'events' inserted.");
@@ -92,6 +93,31 @@ public class SampleDataLoader {
             }
         } catch (SQLException e) {
             System.err.println("[SampleDataLoader] Error inserting sample data for 'events': " + e.getMessage());
+        }
+    }
+
+    private static void insertSampleZones() {
+        String checkSql = "SELECT COUNT(*) AS total FROM zones";
+        try (ResultSet rs = DatabaseManager.query(checkSql)) {
+            if (rs != null && rs.next() && rs.getInt("total") == 0) {
+                String insertSql = """
+                        INSERT INTO zones (event_code, name, capacity, base_price) VALUES
+                        ('E001', 'Tribuna Norte', 15000, 80.00),
+                        ('E001', 'Tribuna Sur', 15000, 80.00),
+                        ('E001', 'Platea VIP', 10000, 150.00),
+                        ('E001', 'Palcos', 5000, 300.00),
+                        ('E002', 'General', 10000, 120.00),
+                        ('E002', 'VIP', 5000, 250.00),
+                        ('E003', 'Platea', 800, 200.00),
+                        ('E003', 'Balcón', 400, 150.00)
+                        """;
+                DatabaseManager.execute(insertSql);
+                ConsoleFormatter.printDebug("[SampleDataLoader] Sample data for 'zones' inserted.");
+            } else {
+                ConsoleFormatter.printDebug("[SampleDataLoader] Skipped inserting 'zones' sample data (table not empty).");
+            }
+        } catch (SQLException e) {
+            System.err.println("[SampleDataLoader] Error inserting sample data for 'zones': " + e.getMessage());
         }
     }
 }

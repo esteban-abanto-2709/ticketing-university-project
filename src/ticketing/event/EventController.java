@@ -14,29 +14,17 @@ public class EventController {
             return false;
         }
 
-        String normalized = normalizeCode(event.getCode());
-
-        if (eventDAO.findByCode(normalized) != null) {
+        if (eventDAO.findByCode(event.getCode()) != null) {
             ConsoleFormatter.printWarning("Ya existe un evento con ese código.");
             return false;
         }
 
-        Event toSave = new Event(
-                normalized,
-                event.getName(),
-                event.getDescription(),
-                event.getDate(),
-                event.getLocalCode(),
-                event.getArtistCode(),
-                event.getStatus()
-        );
-
-        return eventDAO.save(toSave);
+        return eventDAO.save(event);
     }
 
     public Event findByCode(String code) {
         if (code == null || code.isBlank()) return null;
-        return eventDAO.findByCode(normalizeCode(code));
+        return eventDAO.findByCode(code);
     }
 
     public List<Event> findAll() {
@@ -48,35 +36,21 @@ public class EventController {
             return false;
         }
 
-        Event toUpdate = new Event(
-                normalizeCode(event.getCode()),
-                event.getName(),
-                event.getDescription(),
-                event.getDate(),
-                event.getLocalCode(),
-                event.getArtistCode(),
-                event.getStatus()
-        );
-
-        return eventDAO.update(toUpdate);
+        return eventDAO.update(event);
     }
 
     public boolean delete(String code) {
         if (code == null || code.isBlank()) return false;
-        return eventDAO.deleteByCode(normalizeCode(code));
+        return eventDAO.deleteByCode(code);
     }
 
     public boolean exists(String code) {
         if (code == null || code.isBlank()) return false;
-        return eventDAO.findByCode(normalizeCode(code)) != null;
+        return eventDAO.findByCode(code) != null;
     }
 
     public boolean hasEvents() {
         List<Event> all = eventDAO.findAll();
         return all != null && !all.isEmpty();
-    }
-
-    private String normalizeCode(String code) {
-        return (code == null) ? null : code.trim().toUpperCase();
     }
 }

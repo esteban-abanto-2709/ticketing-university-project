@@ -127,7 +127,7 @@ public class InputValidator {
             }
             System.out.println("El código solo debe contener letras y números.");
         }
-        return code.toUpperCase();
+        return code.trim().toUpperCase();
     }
 
     public static void pressEnterToContinue() {

@@ -34,9 +34,8 @@ public class Ticketing {
             ConsoleFormatter.printTabbed("[2] Gestión de Artistas");
             ConsoleFormatter.printTabbed("[3] Gestión de Sponsors");
             ConsoleFormatter.printTabbed("[4] Gestión de Eventos");
-            ConsoleFormatter.printTabbed("[5] Gestión de Entradas (pendiente)");
-            ConsoleFormatter.printTabbed("[6] Gestión de Ventas (pendiente)");
-            ConsoleFormatter.printTabbed("[7] Reportes (pendiente)");
+            ConsoleFormatter.printTabbed("[5] Gestión de Ventas (pendiente)");
+            ConsoleFormatter.printTabbed("[6] Reportes (depende... de si me da pereza)");
 
             ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[9] Salir");
@@ -50,7 +49,6 @@ public class Ticketing {
                 case 2 -> ArtistView.showMenu();
                 case 3 -> SponsorView.showMenu();
                 case 4 -> EventView.showMenu();
-                case 5 -> System.out.println("Módulo de Entradas aún no implementado.");
                 case 6 -> System.out.println("Módulo de Ventas aún no implementado.");
                 case 7 -> System.out.println("Módulo de Reportes aún no implementado.");
                 case 9 -> System.out.println("Saliendo del sistema...");

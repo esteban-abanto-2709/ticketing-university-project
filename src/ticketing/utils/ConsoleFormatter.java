@@ -4,7 +4,7 @@ import ticketing.Config;
 
 public class ConsoleFormatter {
 
-    private static final int MAX_WIDTH = 60;
+    private static final int MAX_WIDTH = 80;
     private static final int TAB_SIZE = 3;
 
     public static void print(String message) {

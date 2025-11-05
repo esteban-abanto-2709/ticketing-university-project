@@ -92,10 +92,9 @@ public class DatabaseSetup {
                         code VARCHAR(20) PRIMARY KEY,
                         name VARCHAR(100) NOT NULL,
                         description TEXT,
-                        date VARCHAR(20) NOT NULL,
+                        date DATE NOT NULL,
                         local_code VARCHAR(20) NOT NULL,
                         artist_code VARCHAR(20) NOT NULL,
-                        status VARCHAR(30) DEFAULT 'PROGRAMADO',
                         FOREIGN KEY (local_code) REFERENCES locals(code),
                         FOREIGN KEY (artist_code) REFERENCES artists(code)
                     )
@@ -127,5 +126,4 @@ public class DatabaseSetup {
             System.err.println("[DatabaseSetup] Error creating table 'zones': " + e.getMessage());
         }
     }
-
 }

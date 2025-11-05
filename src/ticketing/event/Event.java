@@ -1,23 +1,23 @@
 package ticketing.event;
 
-public class Event {
-    private final String code;     // identificador único
-    private String name;           // nombre del evento
-    private String description;    // descripción opcional
-    private String date;           // fecha del evento
-    private String localCode;      // FK - local donde se realiza
-    private String artistCode;     // FK - artista o grupo
-    private String status;         // estado del evento (programado, cancelado, etc.)
+import java.time.LocalDate;
 
-    public Event(String code, String name, String description, String date,
-                 String localCode, String artistCode, String status) {
+public class Event {
+    private final String code;
+    private String name;
+    private String description;
+    private LocalDate date;
+    private String localCode;
+    private String artistCode;
+
+    public Event(String code, String name, String description, LocalDate date,
+                 String localCode, String artistCode) {
         this.code = code;
         this.name = name;
         this.description = description;
         this.date = date;
         this.localCode = localCode;
         this.artistCode = artistCode;
-        this.status = status;
     }
 
     public String getCode() {
@@ -32,7 +32,7 @@ public class Event {
         return description;
     }
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -44,10 +44,6 @@ public class Event {
         return artistCode;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
@@ -56,7 +52,7 @@ public class Event {
         this.description = description;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
@@ -68,12 +64,8 @@ public class Event {
         this.artistCode = artistCode;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     @Override
     public String toString() {
-        return "[" + code + "] " + name + " (" + status + ") - " + date;
+        return "[" + code + "] " + name + " - " + date;
     }
 }
