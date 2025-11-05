@@ -60,8 +60,8 @@ public class EventView {
                 case 4 -> showDetail();
                 case 5 -> deleteEvent();
                 case 6 -> zoneManagement();
-                case 9 -> ConsoleFormatter.print("Regresando al menú principal...");
-                default -> System.out.println("Opción no válida.");
+                case 9 -> ConsoleFormatter.printRight("Regresando al menú principal...");
+                default -> ConsoleFormatter.printRight("Opción no válida.");
             }
 
             if (option != 9) InputValidator.pressEnterToContinue();

@@ -37,8 +37,8 @@ public class ZoneView {
                 case 2 -> editZone(event);
                 case 3 -> deleteZone(event);
                 case 4 -> listZones(event);
-                case 9 -> ConsoleFormatter.printInfo("Regresando al menú de Eventos...");
-                default -> System.out.println("Opción no válida.");
+                case 9 -> ConsoleFormatter.printRight("Regresando al menú de Eventos...");
+                default -> ConsoleFormatter.printRight("Opción no válida.");
             }
 
             if (option != 9) InputValidator.pressEnterToContinue();
@@ -137,7 +137,7 @@ public class ZoneView {
             return;
         }
 
-        ConsoleFormatter.print("Zonas configuradas:");
+        ConsoleFormatter.printRight("Zonas configuradas:");
         for (Zone zone : zones) {
             ConsoleFormatter.printTabbed("- " + zone);
         }

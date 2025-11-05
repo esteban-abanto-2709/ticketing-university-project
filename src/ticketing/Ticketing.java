@@ -15,7 +15,7 @@ import ticketing.utils.InputValidator;
 public class Ticketing {
 
     public static void main(String[] args) {
-        
+
         if (Config.AUTO_CREATE_DB_AND_TABLES) {
             DatabaseSetup.initializeDatabase();
         }
@@ -49,10 +49,10 @@ public class Ticketing {
                 case 2 -> ArtistView.showMenu();
                 case 3 -> SponsorView.showMenu();
                 case 4 -> EventView.showMenu();
-                case 6 -> System.out.println("Módulo de Ventas aún no implementado.");
-                case 7 -> System.out.println("Módulo de Reportes aún no implementado.");
-                case 9 -> System.out.println("Saliendo del sistema...");
-                default -> System.out.println("Opción no válida.");
+                case 6 -> ConsoleFormatter.printRight("Módulo de Ventas aún no implementado.");
+                case 7 -> ConsoleFormatter.printRight("Módulo de Reportes aún no implementado.");
+                case 9 -> ConsoleFormatter.printRight("Saliendo del sistema...");
+                default -> ConsoleFormatter.printRight("Opción no válida.");
             }
 
             if (option != 9) {

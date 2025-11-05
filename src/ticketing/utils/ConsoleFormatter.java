@@ -7,11 +7,29 @@ public class ConsoleFormatter {
     private static final int MAX_WIDTH = 80;
     private static final int TAB_SIZE = 3;
 
-    public static void print(String message) {
-        System.out.println(message);
+    public static void printRight(String text) {
+        if (text == null) text = "";
+        if (text.length() >= MAX_WIDTH) {
+            System.out.println(text.substring(0, MAX_WIDTH));
+            return;
+        }
+
+        int padding = MAX_WIDTH - text.length();
+        String result = " ".repeat(padding) + text;
+        System.out.println(result);
+    }
+
+    public static void printLeft(String text) {
+        if (text == null) text = "";
+        if (text.length() > MAX_WIDTH) {
+            System.out.println(text.substring(0, MAX_WIDTH));
+            return;
+        }
+        System.out.println(text);
     }
 
     public static void printCentered(String text, String fillChar) {
+        if (text == null) text = "";
         if (text.length() >= MAX_WIDTH) {
             System.out.println(text.substring(0, MAX_WIDTH));
             return;
@@ -25,9 +43,6 @@ public class ConsoleFormatter {
         System.out.println(result);
     }
 
-    public static void cleanConsole() {
-        printLineBreak(20);
-    }
 
     public static void printTabbed(String text) {
         printTabbed(text, 1);
@@ -83,6 +98,10 @@ public class ConsoleFormatter {
     public static void printDebug(String message) {
         if (!Config.SHOW_DEBUG_LOGS) return;
         System.out.println(message);
+    }
+
+    public static void cleanConsole() {
+        printLineBreak(25);
     }
 
     public static void printLineBreak(int count) {

@@ -32,8 +32,8 @@ public class ArtistView {
                 case 3 -> updateArtist();
                 case 4 -> showDetail();
                 case 5 -> deleteArtist();
-                case 9 -> System.out.println("Regresando al menú principal...");
-                default -> System.out.println("Opción no válida.");
+                case 9 -> ConsoleFormatter.printRight("Regresando al menú principal...");
+                default -> ConsoleFormatter.printRight("Opción no válida.");
             }
 
             if (option != 9) {
@@ -107,7 +107,8 @@ public class ArtistView {
             return;
         }
 
-        System.out.println("\nDatos actuales:");
+        ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printRight("Datos actuales:");
         showSummary(artist);
 
         ConsoleFormatter.printLineBreak();
@@ -119,7 +120,8 @@ public class ArtistView {
             artist.setName(newName);
         }
 
-        System.out.println("\nNuevos datos:");
+        ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printRight("Nuevos datos:");
         showSummary(artist);
 
         if (InputValidator.getConfirmation("¿Confirma la edición del artista?")) {
@@ -135,7 +137,7 @@ public class ArtistView {
 
     private static void deleteArtist() {
         ConsoleFormatter.printCentered(" ELIMINAR ARTISTA ", "=");
-        System.out.println();
+        ConsoleFormatter.printLineBreak();
 
         if (!controller.hasArtists()) {
             ConsoleFormatter.printInfo("No hay artistas registrados.");
@@ -150,7 +152,8 @@ public class ArtistView {
             return;
         }
 
-        System.out.println("\nArtista a eliminar:");
+        ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printRight("Artista a eliminar:");
         showSummary(artist);
 
         ConsoleFormatter.printWarning("Esta acción no se puede deshacer.");
@@ -168,7 +171,7 @@ public class ArtistView {
 
     private static void showDetail() {
         ConsoleFormatter.printCentered(" DETALLE DE ARTISTA ", "=");
-        System.out.println();
+        ConsoleFormatter.printLineBreak();
 
         if (!controller.hasArtists()) {
             ConsoleFormatter.printInfo("No hay artistas registrados.");

@@ -32,8 +32,8 @@ public class SponsorView {
                 case 3 -> updateSponsor();
                 case 4 -> showDetail();
                 case 5 -> deleteSponsor();
-                case 9 -> System.out.println("Regresando al menú principal...");
-                default -> System.out.println("Opción no válida.");
+                case 9 -> ConsoleFormatter.printRight("Regresando al menú principal...");
+                default -> ConsoleFormatter.printRight("Opción no válida.");
             }
 
             if (option != 9) {
@@ -108,7 +108,8 @@ public class SponsorView {
             return;
         }
 
-        System.out.println("\nDatos actuales:");
+        ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printRight("Datos actuales:");
         showSummary(sponsor);
 
         ConsoleFormatter.printLineBreak();
@@ -123,7 +124,8 @@ public class SponsorView {
         if (!newPhone.isEmpty()) sponsor.setPhone(newPhone);
         if (!newAddress.isEmpty()) sponsor.setAddress(newAddress);
 
-        System.out.println("\nNuevos datos:");
+        ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printRight("Nuevos datos:");
         showSummary(sponsor);
 
         if (InputValidator.getConfirmation("¿Confirma la edición del sponsor?")) {
@@ -139,7 +141,7 @@ public class SponsorView {
 
     private static void showDetail() {
         ConsoleFormatter.printCentered(" DETALLE DE SPONSOR ", "=");
-        System.out.println();
+        ConsoleFormatter.printLineBreak();
 
         if (!controller.hasSponsors()) {
             ConsoleFormatter.printInfo("No hay sponsors registrados.");
@@ -158,7 +160,7 @@ public class SponsorView {
 
     private static void deleteSponsor() {
         ConsoleFormatter.printCentered(" ELIMINAR SPONSOR ", "=");
-        System.out.println();
+        ConsoleFormatter.printLineBreak();
 
         if (!controller.hasSponsors()) {
             ConsoleFormatter.printInfo("No hay sponsors registrados.");
@@ -173,7 +175,8 @@ public class SponsorView {
             return;
         }
 
-        System.out.println("\nSponsor a eliminar:");
+        ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printRight("Sponsor a eliminar:");
         showSummary(sponsor);
 
         ConsoleFormatter.printWarning("Esta acción no se puede deshacer.");
