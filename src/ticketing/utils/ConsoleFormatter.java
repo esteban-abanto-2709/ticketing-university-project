@@ -7,6 +7,10 @@ public class ConsoleFormatter {
     private static final int MAX_WIDTH = 60;
     private static final int TAB_SIZE = 3;
 
+    public static void print(String message) {
+        System.out.println(message);
+    }
+
     public static void printCentered(String text, String fillChar) {
         if (text.length() >= MAX_WIDTH) {
             System.out.println(text.substring(0, MAX_WIDTH));

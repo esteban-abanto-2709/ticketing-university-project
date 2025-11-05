@@ -47,6 +47,6 @@ public class Zone {
 
     @Override
     public String toString() {
-        return name + " (Capacidad: " + capacity + ", Precio base: " + basePrice + ")";
+        return name + " | Cap: " + capacity + ", Precio: S/ " + String.format("%.2f", basePrice);
     }
 }

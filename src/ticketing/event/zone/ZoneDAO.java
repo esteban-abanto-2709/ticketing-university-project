@@ -103,4 +103,16 @@ public class ZoneDAO {
             return false;
         }
     }
+
+    public int getTotalCapacity(String eventCode) {
+        String sql = "SELECT COALESCE(SUM(capacity), 0) AS total FROM zones WHERE event_code = ?";
+        try (ResultSet rs = DatabaseManager.query(sql, eventCode)) {
+            if (rs != null && rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.err.println("[ZoneDAO] Error summing capacity: " + e.getMessage());
+        }
+        return 0;
+    }
 }
