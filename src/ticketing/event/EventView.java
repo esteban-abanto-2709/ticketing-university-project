@@ -60,8 +60,8 @@ public class EventView {
                 case 4 -> showDetail();
                 case 5 -> deleteEvent();
                 case 6 -> zoneManagement();
-                case 9 -> ConsoleFormatter.printRight("Regresando al menú principal...");
-                default -> ConsoleFormatter.printRight("Opción no válida.");
+                case 9 -> ConsoleFormatter.printLeft("Regresando al menú principal...");
+                default -> ConsoleFormatter.printLeft("Opción no válida.");
             }
 
             if (option != 9) InputValidator.pressEnterToContinue();
@@ -249,7 +249,7 @@ public class EventView {
 
         ConsoleFormatter.printLine("=");
         ConsoleFormatter.printList(event.getName(), event.getCode(), " ");
-        ConsoleFormatter.printLine("=");
+        ConsoleFormatter.printLine("-");
 
         ConsoleFormatter.printTabbed(event.getDescription());
         ConsoleFormatter.printLine("=");
@@ -265,7 +265,7 @@ public class EventView {
             ConsoleFormatter.printTabbed("No hay zonas configuradas.");
         } else {
             for (Zone zone : zones) {
-                String price = String.format("%.2f", zone.getBasePrice());
+                String price = String.format("%.2f", zone.getPrice());
                 String right = "(S/ " + price + ") Cap: " + zone.getCapacity();
                 ConsoleFormatter.printList(zone.getName(), right, " ");
             }

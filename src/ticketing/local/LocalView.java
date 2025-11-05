@@ -32,8 +32,8 @@ public class LocalView {
                 case 3 -> updateLocal();
                 case 4 -> showDetail();
                 case 5 -> deleteLocal();
-                case 9 -> ConsoleFormatter.printRight("Regresando al menú principal...");
-                default -> ConsoleFormatter.printRight("Opción no válida.");
+                case 9 -> ConsoleFormatter.printLeft("Regresando al menú principal...");
+                default -> ConsoleFormatter.printLeft("Opción no válida.");
             }
 
             if (option != 9) {
@@ -110,7 +110,7 @@ public class LocalView {
         }
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Datos actuales:");
+        ConsoleFormatter.printLeft("Datos actuales:");
         showSummary(local);
 
         ConsoleFormatter.printLineBreak();
@@ -134,7 +134,7 @@ public class LocalView {
         }
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Nuevos datos:");
+        ConsoleFormatter.printLeft("Nuevos datos:");
         showSummary(local);
 
         if (InputValidator.getConfirmation("¿Confirma la edición del local?")) {
@@ -166,7 +166,7 @@ public class LocalView {
         }
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Local a eliminar:");
+        ConsoleFormatter.printLeft("Local a eliminar:");
         showSummary(local);
         ConsoleFormatter.printWarning("Esta acción no se puede deshacer.");
 

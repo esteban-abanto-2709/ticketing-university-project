@@ -26,7 +26,7 @@ public class ZoneController {
                 eventCode,
                 name,
                 zone.getCapacity(),
-                zone.getBasePrice()
+                zone.getPrice()
         );
 
         return zoneDAO.save(toSave);
@@ -52,7 +52,7 @@ public class ZoneController {
                 normalizeCode(zone.getEventCode()),
                 normalizeName(zone.getName()),
                 zone.getCapacity(),
-                zone.getBasePrice()
+                zone.getPrice()
         );
 
         return zoneDAO.update(toUpdate);

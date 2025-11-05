@@ -1,33 +1,26 @@
 package ticketing.event.zone;
 
 public class Zone {
-    private String eventCode;
-    private String name;
+    private final String eventCode;
+    private final String name;
     private int capacity;
-    private double basePrice;
+    private double price;
 
-    public Zone(String eventCode, String name, int capacity, double basePrice) {
+    public Zone(String eventCode, String name, int capacity, double price) {
         this.eventCode = eventCode;
         this.name = name;
         this.capacity = capacity;
-        this.basePrice = basePrice;
+        this.price = price;
     }
 
     public String getEventCode() {
         return eventCode;
     }
 
-    public void setEventCode(String eventCode) {
-        this.eventCode = eventCode;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getCapacity() {
         return capacity;
@@ -37,16 +30,16 @@ public class Zone {
         this.capacity = capacity;
     }
 
-    public double getBasePrice() {
-        return basePrice;
+    public double getPrice() {
+        return price;
     }
 
-    public void setBasePrice(double basePrice) {
-        this.basePrice = basePrice;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
     @Override
     public String toString() {
-        return name + " | Cap: " + capacity + ", Precio: S/ " + String.format("%.2f", basePrice);
+        return name + " | Cap: " + capacity + ", (S/ " + String.format("%.2f", price) + ")";
     }
 }

@@ -113,7 +113,7 @@ public class DatabaseSetup {
                         event_code VARCHAR(20) NOT NULL,
                         name VARCHAR(100) NOT NULL,
                         capacity INT NOT NULL,
-                        base_price DOUBLE NOT NULL,
+                        price DOUBLE NOT NULL,
                         PRIMARY KEY (event_code, name),
                         FOREIGN KEY (event_code) REFERENCES events(code)
                     )

@@ -49,10 +49,10 @@ public class Ticketing {
                 case 2 -> ArtistView.showMenu();
                 case 3 -> SponsorView.showMenu();
                 case 4 -> EventView.showMenu();
-                case 6 -> ConsoleFormatter.printRight("Módulo de Ventas aún no implementado.");
-                case 7 -> ConsoleFormatter.printRight("Módulo de Reportes aún no implementado.");
-                case 9 -> ConsoleFormatter.printRight("Saliendo del sistema...");
-                default -> ConsoleFormatter.printRight("Opción no válida.");
+                case 6 -> ConsoleFormatter.printLeft("Módulo de Ventas aún no implementado.");
+                case 7 -> ConsoleFormatter.printLeft("Módulo de Reportes aún no implementado.");
+                case 9 -> ConsoleFormatter.printLeft("Saliendo del sistema...");
+                default -> ConsoleFormatter.printLeft("Opción no válida.");
             }
 
             if (option != 9) {

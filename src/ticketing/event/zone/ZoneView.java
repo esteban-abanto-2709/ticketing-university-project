@@ -37,8 +37,8 @@ public class ZoneView {
                 case 2 -> editZone(event);
                 case 3 -> deleteZone(event);
                 case 4 -> listZones(event);
-                case 9 -> ConsoleFormatter.printRight("Regresando al menú de Eventos...");
-                default -> ConsoleFormatter.printRight("Opción no válida.");
+                case 9 -> ConsoleFormatter.printLeft("Regresando al menú de Eventos...");
+                default -> ConsoleFormatter.printLeft("Opción no válida.");
             }
 
             if (option != 9) InputValidator.pressEnterToContinue();
@@ -105,10 +105,10 @@ public class ZoneView {
         }
 
         Double newPrice = InputValidator.getOptionalDouble(
-                "Nuevo precio base [" + z.getBasePrice() + "]: "
+                "Nuevo precio base [" + z.getPrice() + "]: "
         );
         if (newPrice != null) {
-            if (newPrice >= 0) z.setBasePrice(newPrice);
+            if (newPrice >= 0) z.setPrice(newPrice);
             else ConsoleFormatter.printError("El precio ingresado no es válido.");
         }
 
@@ -137,7 +137,7 @@ public class ZoneView {
             return;
         }
 
-        ConsoleFormatter.printRight("Zonas configuradas:");
+        ConsoleFormatter.printLeft("Zonas configuradas:");
         for (Zone zone : zones) {
             ConsoleFormatter.printTabbed("- " + zone);
         }

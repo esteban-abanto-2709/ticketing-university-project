@@ -32,8 +32,8 @@ public class SponsorView {
                 case 3 -> updateSponsor();
                 case 4 -> showDetail();
                 case 5 -> deleteSponsor();
-                case 9 -> ConsoleFormatter.printRight("Regresando al menú principal...");
-                default -> ConsoleFormatter.printRight("Opción no válida.");
+                case 9 -> ConsoleFormatter.printLeft("Regresando al menú principal...");
+                default -> ConsoleFormatter.printLeft("Opción no válida.");
             }
 
             if (option != 9) {
@@ -109,7 +109,7 @@ public class SponsorView {
         }
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Datos actuales:");
+        ConsoleFormatter.printLeft("Datos actuales:");
         showSummary(sponsor);
 
         ConsoleFormatter.printLineBreak();
@@ -125,7 +125,7 @@ public class SponsorView {
         if (!newAddress.isEmpty()) sponsor.setAddress(newAddress);
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Nuevos datos:");
+        ConsoleFormatter.printLeft("Nuevos datos:");
         showSummary(sponsor);
 
         if (InputValidator.getConfirmation("¿Confirma la edición del sponsor?")) {
@@ -176,7 +176,7 @@ public class SponsorView {
         }
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Sponsor a eliminar:");
+        ConsoleFormatter.printLeft("Sponsor a eliminar:");
         showSummary(sponsor);
 
         ConsoleFormatter.printWarning("Esta acción no se puede deshacer.");

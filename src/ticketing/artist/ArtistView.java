@@ -32,8 +32,8 @@ public class ArtistView {
                 case 3 -> updateArtist();
                 case 4 -> showDetail();
                 case 5 -> deleteArtist();
-                case 9 -> ConsoleFormatter.printRight("Regresando al menú principal...");
-                default -> ConsoleFormatter.printRight("Opción no válida.");
+                case 9 -> ConsoleFormatter.printLeft("Regresando al menú principal...");
+                default -> ConsoleFormatter.printLeft("Opción no válida.");
             }
 
             if (option != 9) {
@@ -108,7 +108,7 @@ public class ArtistView {
         }
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Datos actuales:");
+        ConsoleFormatter.printLeft("Datos actuales:");
         showSummary(artist);
 
         ConsoleFormatter.printLineBreak();
@@ -121,7 +121,7 @@ public class ArtistView {
         }
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Nuevos datos:");
+        ConsoleFormatter.printLeft("Nuevos datos:");
         showSummary(artist);
 
         if (InputValidator.getConfirmation("¿Confirma la edición del artista?")) {
@@ -153,7 +153,7 @@ public class ArtistView {
         }
 
         ConsoleFormatter.printLineBreak();
-        ConsoleFormatter.printRight("Artista a eliminar:");
+        ConsoleFormatter.printLeft("Artista a eliminar:");
         showSummary(artist);
 
         ConsoleFormatter.printWarning("Esta acción no se puede deshacer.");

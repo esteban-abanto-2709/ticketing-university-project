@@ -7,6 +7,18 @@ public class ConsoleFormatter {
     private static final int MAX_WIDTH = 80;
     private static final int TAB_SIZE = 3;
 
+    public static void printLeft(String text) {
+        if (text == null) text = "";
+        if (text.length() >= MAX_WIDTH) {
+            System.out.println(text.substring(0, MAX_WIDTH));
+            return;
+        }
+
+        int padding = MAX_WIDTH - text.length();
+        String result = text + " ".repeat(padding);
+        System.out.println(result);
+    }
+
     public static void printRight(String text) {
         if (text == null) text = "";
         if (text.length() >= MAX_WIDTH) {
@@ -17,15 +29,6 @@ public class ConsoleFormatter {
         int padding = MAX_WIDTH - text.length();
         String result = " ".repeat(padding) + text;
         System.out.println(result);
-    }
-
-    public static void printLeft(String text) {
-        if (text == null) text = "";
-        if (text.length() > MAX_WIDTH) {
-            System.out.println(text.substring(0, MAX_WIDTH));
-            return;
-        }
-        System.out.println(text);
     }
 
     public static void printCentered(String text, String fillChar) {

@@ -12,13 +12,13 @@ import java.util.List;
 public class ZoneDAO {
 
     public boolean save(Zone zone) {
-        String sql = "INSERT INTO zones (event_code, name, capacity, base_price) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO zones (event_code, name, capacity, price) VALUES (?, ?, ?, ?)";
         try {
             DatabaseManager.execute(sql,
                     zone.getEventCode(),
                     zone.getName(),
                     zone.getCapacity(),
-                    zone.getBasePrice()
+                    zone.getPrice()
             );
             ConsoleFormatter.printDebug("[ZoneDAO] Zone saved successfully.");
             return true;
@@ -36,7 +36,7 @@ public class ZoneDAO {
                         rs.getString("event_code"),
                         rs.getString("name"),
                         rs.getInt("capacity"),
-                        rs.getDouble("base_price")
+                        rs.getDouble("price")
                 );
             }
         } catch (SQLException e) {
@@ -54,7 +54,7 @@ public class ZoneDAO {
                         rs.getString("event_code"),
                         rs.getString("name"),
                         rs.getInt("capacity"),
-                        rs.getDouble("base_price")
+                        rs.getDouble("price")
                 ));
             }
         } catch (SQLException e) {
@@ -64,11 +64,11 @@ public class ZoneDAO {
     }
 
     public boolean update(Zone zone) {
-        String sql = "UPDATE zones SET capacity = ?, base_price = ? WHERE event_code = ? AND name = ?";
+        String sql = "UPDATE zones SET capacity = ?, price = ? WHERE event_code = ? AND name = ?";
         try {
             DatabaseManager.execute(sql,
                     zone.getCapacity(),
-                    zone.getBasePrice(),
+                    zone.getPrice(),
                     zone.getEventCode(),
                     zone.getName()
             );

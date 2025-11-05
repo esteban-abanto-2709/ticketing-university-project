@@ -101,7 +101,7 @@ public class SampleDataLoader {
         try (ResultSet rs = DatabaseManager.query(checkSql)) {
             if (rs != null && rs.next() && rs.getInt("total") == 0) {
                 String insertSql = """
-                        INSERT INTO zones (event_code, name, capacity, base_price) VALUES
+                        INSERT INTO zones (event_code, name, capacity, price) VALUES
                         ('E001', 'Tribuna Norte', 15000, 80.00),
                         ('E001', 'Tribuna Sur', 15000, 80.00),
                         ('E001', 'Platea VIP', 10000, 150.00),
