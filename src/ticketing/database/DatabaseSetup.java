@@ -20,6 +20,7 @@ public class DatabaseSetup {
         createSponsorTable();
         createEventTable();
         createZoneTable();
+        createTicketTypeTable();
 
         ConsoleFormatter.printDebug("[DatabaseSetup] Tables verified or created successfully.");
     }
@@ -124,6 +125,25 @@ public class DatabaseSetup {
             ConsoleFormatter.printDebug("[DatabaseSetup] Table 'zones' verified or created successfully.");
         } catch (Exception e) {
             System.err.println("[DatabaseSetup] Error creating table 'zones': " + e.getMessage());
+        }
+    }
+
+    private static void createTicketTypeTable() {
+        String sql = """
+                CREATE TABLE IF NOT EXISTS ticket_types (
+                    event_code VARCHAR(20) NOT NULL,
+                    name VARCHAR(50) NOT NULL,
+                    description TEXT,
+                    price DECIMAL(10, 2) NOT NULL,
+                    PRIMARY KEY (event_code, name),
+                    FOREIGN KEY (event_code) REFERENCES events(code)
+                )
+            """;
+        try {
+            DatabaseManager.execute(sql);
+            ConsoleFormatter.printDebug("[DatabaseSetup] Table 'ticket_types' verified or created successfully.");
+        } catch (Exception e) {
+            System.err.println("[DatabaseSetup] Error creating table 'ticket_types': " + e.getMessage());
         }
     }
 }

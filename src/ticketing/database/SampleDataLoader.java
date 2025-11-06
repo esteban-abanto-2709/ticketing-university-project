@@ -13,6 +13,7 @@ public class SampleDataLoader {
         insertSampleSponsors();
         insertSampleEvents();
         insertSampleZones();
+        insertSampleTicketTypes();
     }
 
     private static void insertSampleLocals() {
@@ -118,6 +119,34 @@ public class SampleDataLoader {
             }
         } catch (SQLException e) {
             System.err.println("[SampleDataLoader] Error inserting sample data for 'zones': " + e.getMessage());
+        }
+    }
+
+    private static void insertSampleTicketTypes() {
+        String checkSql = "SELECT COUNT(*) AS total FROM ticket_types";
+        try (ResultSet rs = DatabaseManager.query(checkSql)) {
+            if (rs != null && rs.next() && rs.getInt("total") == 0) {
+                String insertSql = """
+                        INSERT INTO ticket_types (event_code, name, description, price) VALUES
+                        ('E001', 'Fan Experience', 'Acceso VIP + foto con el artista', 600.00),
+                        ('E001', 'Meet & Greet', 'Firma de autógrafos y charla previa', 200.00),
+                        ('E001', 'Regular', 'Entrada estándar sin beneficios', 0.00),
+                        
+                        ('E002', 'Fan Experience', 'Acceso exclusivo a backstage y sesión de fotos', 600.00),
+                        ('E002', 'Meet & Greet', 'Firma de autógrafos y charla previa con la banda', 200.00),
+                        ('E002', 'Regular', 'Entrada estándar sin beneficios adicionales', 0.00),
+                        
+                        ('E003', 'Asiento Preferencial', 'Primera fila y atención personalizada', 350.00),
+                        ('E003', 'Entrada General', 'Asiento estándar', 120.00),
+                        ('E003', 'Estudiante', 'Descuento especial para estudiantes', 60.00)
+                        """;
+                DatabaseManager.execute(insertSql);
+                ConsoleFormatter.printDebug("[SampleDataLoader] Sample data for 'ticket_types' inserted.");
+            } else {
+                ConsoleFormatter.printDebug("[SampleDataLoader] Skipped inserting 'ticket_types' sample data (table not empty).");
+            }
+        } catch (SQLException e) {
+            System.err.println("[SampleDataLoader] Error inserting sample data for 'ticket_types': " + e.getMessage());
         }
     }
 }

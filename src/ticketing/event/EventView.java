@@ -3,6 +3,9 @@ package ticketing.event;
 import ticketing.artist.Artist;
 import ticketing.artist.ArtistController;
 
+import ticketing.event.ticketType.TicketType;
+import ticketing.event.ticketType.TicketTypeController;
+import ticketing.event.ticketType.TicketTypeView;
 import ticketing.event.zone.Zone;
 import ticketing.event.zone.ZoneController;
 import ticketing.event.zone.ZoneView;
@@ -22,6 +25,7 @@ public class EventView {
     private static final ArtistController artistController = new ArtistController();
     private static final LocalController localController = new LocalController();
     private static final ZoneController zoneController = new ZoneController();
+    private static final TicketTypeController ticketTypeController = new TicketTypeController();
 
     public static void showMenu() {
 
@@ -60,6 +64,7 @@ public class EventView {
                 case 4 -> showDetail();
                 case 5 -> deleteEvent();
                 case 6 -> zoneManagement();
+                case 7 -> ticketTypeManagement();
                 case 9 -> ConsoleFormatter.printLeft("Regresando al menú principal...");
                 default -> ConsoleFormatter.printLeft("Opción no válida.");
             }
@@ -272,10 +277,38 @@ public class EventView {
         }
 
         ConsoleFormatter.printLine("=");
+
+        List<TicketType> ticketTypes = ticketTypeController.findByEvent(event.getCode());
+
+        if (ticketTypes.isEmpty()) {
+            ConsoleFormatter.printTabbed("No hay tipos configurados.");
+        } else {
+            for (TicketType zone : ticketTypes) {
+                String right = "(S/ " + String.format("%.2f", zone.getPrice()) + ")";
+                ConsoleFormatter.printList(zone.getName(), right, " ");
+            }
+        }
+
+        ConsoleFormatter.printLine("=");
     }
 
     private static void zoneManagement() {
 
+        Event event = getEventToManagement();
+        if (event == null) return;
+
+        ZoneView.showMenu(event);
+    }
+
+    private static void ticketTypeManagement() {
+
+        Event event = getEventToManagement();
+        if (event == null) return;
+
+        TicketTypeView.showMenu(event);
+    }
+
+    private static Event getEventToManagement() {
         ConsoleFormatter.printInfo("Seleccione el Evento a gestionar:");
         List<Event> events = eventController.findAll();
         events.forEach(event -> ConsoleFormatter.printTabbed("- " + event));
@@ -285,9 +318,8 @@ public class EventView {
 
         if (event == null) {
             ConsoleFormatter.printError("Evento no encontrado.");
-            return;
+            return null;
         }
-
-        ZoneView.showMenu(event);
+        return event;
     }
 }

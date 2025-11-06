@@ -66,6 +66,6 @@ public class Event {
 
     @Override
     public String toString() {
-        return "[" + code + "] " + name + " - " + date;
+        return "[" + code + "] " + name;
     }
 }
