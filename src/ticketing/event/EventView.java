@@ -231,8 +231,8 @@ public class EventView {
 
     private static void showDetail() {
 
-        ConsoleFormatter.printCentered(" DETALLE DEL EVENTO ", "=");
         ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printCentered(" DETALLE DEL EVENTO ", "=");
 
         if (!eventController.hasEvents()) {
             ConsoleFormatter.printInfo("No hay eventos registrados.");
@@ -252,40 +252,57 @@ public class EventView {
 
     private static void showSummary(Event event) {
 
-        ConsoleFormatter.printLine("=");
-        ConsoleFormatter.printList(event.getName(), event.getCode(), " ");
-        ConsoleFormatter.printLine("-");
-
-        ConsoleFormatter.printTabbed(event.getDescription());
-        ConsoleFormatter.printLine("=");
-
-        ConsoleFormatter.printList("Fecha", event.getDate().toString(), " ");
-        ConsoleFormatter.printList("Local", event.getLocalCode(), " ");
-        ConsoleFormatter.printList("Artista", event.getArtistCode(), " ");
-        ConsoleFormatter.printLine("=");
+        Artist artist = artistController.findByCode(event.getArtistCode());
+        Local local = localController.findByCode(event.getLocalCode());
 
         List<Zone> zones = zoneController.findByEvent(event.getCode());
+        List<TicketType> ticketTypes = ticketTypeController.findByEvent(event.getCode());
+
+        ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printCentered(" DETALLES DEL EVENTO [" + event.getCode() + "] ", "=");
+        ConsoleFormatter.printList(event.getName(), event.getDate().toString(), " ");
+        ConsoleFormatter.printTabbed(event.getDescription());
+
+        ConsoleFormatter.printCentered(" ARTISTA ", "=");
+        ConsoleFormatter.printList(artist.getCode(), artist.getName(), " ");
+
+        ConsoleFormatter.printCentered(" LOCAL [" + local.getCode() + "] ", "=");
+        ConsoleFormatter.printList(local.getName(), String.valueOf(local.getCapacity()), " ");
+        ConsoleFormatter.printList(local.getAddress(), "", " ");
+
+        ConsoleFormatter.printCentered(" ZONAS DISPONIBLES ", "=");
 
         if (zones.isEmpty()) {
             ConsoleFormatter.printTabbed("No hay zonas configuradas.");
         } else {
+            ConsoleFormatter.printList("Nombre", "Capacidad", " ");
+            ConsoleFormatter.printLine("-");
+
+            int capacity = 0;
+
             for (Zone zone : zones) {
+                capacity += zone.getCapacity();
+
                 String price = String.format("%.2f", zone.getPrice());
-                String right = "(S/ " + price + ") Cap: " + zone.getCapacity();
+                String right = "(S/ " + price + ") " + zone.getCapacity();
                 ConsoleFormatter.printList(zone.getName(), right, " ");
             }
+
+            ConsoleFormatter.printLine("-");
+            ConsoleFormatter.printList("Total Capacidad:", String.valueOf(capacity), " ");
         }
 
-        ConsoleFormatter.printLine("=");
-
-        List<TicketType> ticketTypes = ticketTypeController.findByEvent(event.getCode());
+        ConsoleFormatter.printCentered(" TIPOS DE ENTRADA ", "=");
 
         if (ticketTypes.isEmpty()) {
             ConsoleFormatter.printTabbed("No hay tipos configurados.");
         } else {
+            ConsoleFormatter.printLineBreak();
             for (TicketType zone : ticketTypes) {
-                String right = "(S/ " + String.format("%.2f", zone.getPrice()) + ")";
+                String right = "S/ " + String.format("%.2f", zone.getPrice());
                 ConsoleFormatter.printList(zone.getName(), right, " ");
+                ConsoleFormatter.printList(zone.getDescription(), "", " ");
+                ConsoleFormatter.printLineBreak();
             }
         }
 
