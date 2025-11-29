@@ -3,15 +3,18 @@ package ticketing.event;
 import ticketing.artist.Artist;
 import ticketing.artist.ArtistController;
 
-import ticketing.event.ticketType.TicketType;
-import ticketing.event.ticketType.TicketTypeController;
-import ticketing.event.ticketType.TicketTypeView;
+import ticketing.local.Local;
+import ticketing.local.LocalController;
+
 import ticketing.event.zone.Zone;
 import ticketing.event.zone.ZoneController;
 import ticketing.event.zone.ZoneView;
 
-import ticketing.local.Local;
-import ticketing.local.LocalController;
+import ticketing.event.ticketType.TicketType;
+import ticketing.event.ticketType.TicketTypeController;
+import ticketing.event.ticketType.TicketTypeView;
+
+import ticketing.ticket.TicketController;
 
 import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;
@@ -26,6 +29,7 @@ public class EventView {
     private static final LocalController localController = new LocalController();
     private static final ZoneController zoneController = new ZoneController();
     private static final TicketTypeController ticketTypeController = new TicketTypeController();
+    private static final TicketController ticketController = new TicketController();
 
     public static void showMenu() {
 
@@ -51,6 +55,7 @@ public class EventView {
             ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[6] Gestión de Zonas");
             ConsoleFormatter.printTabbed("[7] Gestión de Tipos de Entrada");
+            ConsoleFormatter.printTabbed("[8] Generar Entradas");
             ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[9] Volver al menú principal");
             ConsoleFormatter.printLine("-");
@@ -65,6 +70,7 @@ public class EventView {
                 case 5 -> deleteEvent();
                 case 6 -> zoneManagement();
                 case 7 -> ticketTypeManagement();
+                case 8 -> generateTicketsForEvent();
                 case 9 -> ConsoleFormatter.printLeft("Regresando al menú principal...");
                 default -> ConsoleFormatter.printLeft("Opción no válida.");
             }
@@ -338,5 +344,63 @@ public class EventView {
             return null;
         }
         return event;
+    }
+
+    private static void generateTicketsForEvent() {
+        ConsoleFormatter.printCentered(" GENERAR ENTRADAS ", "=");
+        ConsoleFormatter.printLineBreak();
+
+        if (!eventController.hasEvents()) {
+            ConsoleFormatter.printInfo("No hay eventos registrados.");
+            return;
+        }
+
+        String eventCode = InputValidator.getCode("Ingrese código del evento: ");
+        Event event = eventController.findByCode(eventCode);
+
+        if (event == null) {
+            ConsoleFormatter.printError("Evento no encontrado.");
+            return;
+        }
+
+        // Verificar si ya tiene entradas generadas
+        if (ticketController.hasTickets(eventCode)) {
+            int total = ticketController.countByEvent(eventCode);
+            ConsoleFormatter.printWarning("Este evento ya tiene " + total + " entradas generadas.");
+            return;
+        }
+
+        // Verificar que tenga zonas configuradas
+        if (!zoneController.hasZones(eventCode)) {
+            ConsoleFormatter.printError("Debe configurar al menos una zona antes de generar entradas.");
+            return;
+        }
+
+        // Mostrar resumen
+        List<Zone> zones = zoneController.findByEvent(eventCode);
+        int totalCapacity = zoneController.getTotalCapacity(eventCode);
+
+        ConsoleFormatter.printInfo("Evento: " + event.getName());
+        ConsoleFormatter.printInfo("Zonas configuradas: " + zones.size());
+        ConsoleFormatter.printInfo("Capacidad total: " + totalCapacity + " entradas");
+        ConsoleFormatter.printLineBreak();
+
+        for (Zone zone : zones) {
+            ConsoleFormatter.printTabbed("- " + zone.getName() + ": " + zone.getCapacity() + " entradas");
+        }
+
+        ConsoleFormatter.printLineBreak();
+        ConsoleFormatter.printWarning("Esta acción generará " + totalCapacity + " entradas en la base de datos.");
+
+        if (InputValidator.getConfirmation("¿Desea continuar?")) {
+            if (ticketController.generateForEvent(eventCode)) {
+                ConsoleFormatter.printSuccess("¡Entradas generadas exitosamente!");
+                ConsoleFormatter.printInfo("El evento ahora está listo para la venta de entradas.");
+            } else {
+                ConsoleFormatter.printError("Ocurrió un error al generar las entradas.");
+            }
+        } else {
+            ConsoleFormatter.printInfo("Generación de entradas cancelada.");
+        }
     }
 }

@@ -35,7 +35,6 @@ public class Ticketing {
             ConsoleFormatter.printTabbed("[3] Gestión de Sponsors");
             ConsoleFormatter.printTabbed("[4] Gestión de Eventos");
             ConsoleFormatter.printTabbed("[5] Gestión de Ventas (pendiente)");
-            ConsoleFormatter.printTabbed("[6] Reportes (depende... de si me da pereza)");
 
             ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[9] Salir");
@@ -49,8 +48,7 @@ public class Ticketing {
                 case 2 -> ArtistView.showMenu();
                 case 3 -> SponsorView.showMenu();
                 case 4 -> EventView.showMenu();
-                case 6 -> ConsoleFormatter.printLeft("Módulo de Ventas aún no implementado.");
-                case 7 -> ConsoleFormatter.printLeft("Módulo de Reportes aún no implementado.");
+                case 5 -> ConsoleFormatter.printLeft("Módulo de Ventas aún no implementado.");
                 case 9 -> ConsoleFormatter.printLeft("Saliendo del sistema...");
                 default -> ConsoleFormatter.printLeft("Opción no válida.");
             }

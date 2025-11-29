@@ -1,0 +1,80 @@
+package ticketing.ticket;
+
+import ticketing.event.zone.Zone;
+import ticketing.event.zone.ZoneController;
+import ticketing.utils.ConsoleFormatter;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TicketController {
+
+    private final TicketDAO ticketDAO = new TicketDAO();
+    private final ZoneController zoneController = new ZoneController();
+
+    public boolean generateForEvent(String eventCode) {
+        if (eventCode == null || eventCode.isBlank()) {
+            ConsoleFormatter.printError("Código de evento inválido.");
+            return false;
+        }
+
+        int existingTickets = ticketDAO.countByEvent(eventCode);
+        if (existingTickets > 0) {
+            ConsoleFormatter.printWarning("Este evento ya tiene " + existingTickets + " entradas generadas.");
+            return false;
+        }
+
+        List<Zone> zones = zoneController.findByEvent(eventCode);
+        if (zones == null || zones.isEmpty()) {
+            ConsoleFormatter.printError("El evento no tiene zonas configuradas. Configure zonas antes de generar entradas.");
+            return false;
+        }
+
+        List<Ticket> allTickets = new ArrayList<>();
+        int totalCapacity = 0;
+
+        for (Zone zone : zones) {
+            totalCapacity += zone.getCapacity();
+            for (int i = 1; i <= zone.getCapacity(); i++) {
+                Ticket ticket = new Ticket(eventCode, zone.getName(), i);
+                allTickets.add(ticket);
+            }
+            ConsoleFormatter.printDebug("[TicketController] Prepared " + zone.getCapacity() + " tickets for zone: " + zone.getName());
+        }
+
+        ConsoleFormatter.printInfo("Insertando " + totalCapacity + " entradas en la base de datos...");
+        ConsoleFormatter.printInfo("Esto puede tomar unos segundos, por favor espere...");
+
+        if (ticketDAO.saveBatch(allTickets)) {
+            ConsoleFormatter.printSuccess("Se generaron " + totalCapacity + " entradas exitosamente.");
+            return true;
+        } else {
+            ConsoleFormatter.printError("Error al generar entradas.");
+            return false;
+        }
+    }
+
+    public int countByEvent(String eventCode) {
+        if (eventCode == null || eventCode.isBlank()) return 0;
+        return ticketDAO.countByEvent(eventCode);
+    }
+
+    public int countAvailableByEvent(String eventCode) {
+        if (eventCode == null || eventCode.isBlank()) return 0;
+        return ticketDAO.countByEventAndStatus(eventCode, "AVAILABLE");
+    }
+
+    public List<Ticket> findByEvent(String eventCode) {
+        if (eventCode == null || eventCode.isBlank()) return null;
+        return ticketDAO.findByEvent(eventCode);
+    }
+
+    public boolean hasTickets(String eventCode) {
+        return countByEvent(eventCode) > 0;
+    }
+
+    public boolean deleteByEvent(String eventCode) {
+        if (eventCode == null || eventCode.isBlank()) return false;
+        return ticketDAO.deleteByEvent(eventCode);
+    }
+}
