@@ -55,17 +55,23 @@ public class TicketController {
     }
 
     public int countByEvent(String eventCode) {
-        if (eventCode == null || eventCode.isBlank()) return 0;
+        if (eventCode == null || eventCode.isBlank()) {
+            return 0;
+        }
         return ticketDAO.countByEvent(eventCode);
     }
 
     public int countAvailableByEvent(String eventCode) {
-        if (eventCode == null || eventCode.isBlank()) return 0;
+        if (eventCode == null || eventCode.isBlank()) {
+            return 0;
+        }
         return ticketDAO.countByEventAndStatus(eventCode, "AVAILABLE");
     }
 
     public List<Ticket> findByEvent(String eventCode) {
-        if (eventCode == null || eventCode.isBlank()) return null;
+        if (eventCode == null || eventCode.isBlank()) {
+            return null;
+        }
         return ticketDAO.findByEvent(eventCode);
     }
 
@@ -74,7 +80,80 @@ public class TicketController {
     }
 
     public boolean deleteByEvent(String eventCode) {
-        if (eventCode == null || eventCode.isBlank()) return false;
+        if (eventCode == null || eventCode.isBlank()) {
+            return false;
+        }
         return ticketDAO.deleteByEvent(eventCode);
+    }
+
+    public int countAvailableByZone(String eventCode, String zoneName) {
+        if (eventCode == null || zoneName == null) return 0;
+        return ticketDAO.countAvailableByZone(eventCode, zoneName);
+    }
+
+    public boolean sellTickets(String eventCode, String zoneName, String ticketType, int quantity, int saleId) {
+        if (eventCode == null || zoneName == null || ticketType == null || quantity <= 0) {
+            ConsoleFormatter.printError("Datos de venta inválidos.");
+            return false;
+        }
+
+        // Verificar disponibilidad
+        int available = ticketDAO.countAvailableByZone(eventCode, zoneName);
+        if (available < quantity) {
+            ConsoleFormatter.printError("No hay suficientes entradas disponibles. Solo quedan " + available + " entradas.");
+            return false;
+        }
+
+        // Obtener tickets disponibles
+        List<Ticket> availableTickets = ticketDAO.findAvailableByZone(eventCode, zoneName, quantity);
+
+        if (availableTickets.size() < quantity) {
+            ConsoleFormatter.printError("Error al obtener las entradas disponibles.");
+            return false;
+        }
+
+        // Actualizar los tickets
+        for (Ticket ticket : availableTickets) {
+            ticket.setType(ticketType);
+            ticket.setStatus("SOLD");
+            ticket.setSaleId(saleId);
+        }
+
+        // Guardar cambios en batch
+        if (ticketDAO.updateBatch(availableTickets)) {
+            ConsoleFormatter.printSuccess("Venta registrada exitosamente. " + quantity + " entradas vendidas.");
+            return true;
+        } else {
+            ConsoleFormatter.printError("Error al registrar la venta.");
+            return false;
+        }
+    }
+
+    public List<Ticket> findBySaleId(int saleId) {
+        return ticketDAO.findBySaleId(saleId);
+    }
+
+    public boolean cancelSale(int saleId) {
+        List<Ticket> tickets = ticketDAO.findBySaleId(saleId);
+
+        if (tickets == null || tickets.isEmpty()) {
+            ConsoleFormatter.printWarning("No se encontraron entradas con ese ID de venta.");
+            return false;
+        }
+
+        // Liberar los tickets
+        for (Ticket ticket : tickets) {
+            ticket.setType(null);
+            ticket.setStatus("AVAILABLE");
+            ticket.setSaleId(null);
+        }
+
+        if (ticketDAO.updateBatch(tickets)) {
+            ConsoleFormatter.printSuccess("Venta cancelada. " + tickets.size() + " entradas liberadas.");
+            return true;
+        } else {
+            ConsoleFormatter.printError("Error al cancelar la venta.");
+            return false;
+        }
     }
 }

@@ -14,7 +14,7 @@ public class EventDAO implements GenericDAO<Event> {
 
     @Override
     public boolean save(Event entity) {
-        String sql = "INSERT INTO events (code, name, description, date, local_code, artist_code) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO events (code, name, description, date, local_code, artist_code, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try {
             DatabaseManager.execute(sql,
                     entity.getCode(),
@@ -22,7 +22,8 @@ public class EventDAO implements GenericDAO<Event> {
                     entity.getDescription(),
                     Date.valueOf(entity.getDate()),
                     entity.getLocalCode(),
-                    entity.getArtistCode()
+                    entity.getArtistCode(),
+                    entity.getStatus()
             );
             return true;
         } catch (Exception e) {
@@ -63,10 +64,10 @@ public class EventDAO implements GenericDAO<Event> {
     @Override
     public boolean update(Event entity) {
         String sql = """
-                    UPDATE events
-                    SET name = ?, description = ?, date = ?, local_code = ?, artist_code = ?
-                    WHERE code = ?
-                """;
+                UPDATE events
+                SET name = ?, description = ?, date = ?, local_code = ?, artist_code = ?, status = ?
+                WHERE code = ?
+            """;
         try {
             DatabaseManager.execute(sql,
                     entity.getName(),
@@ -74,6 +75,7 @@ public class EventDAO implements GenericDAO<Event> {
                     Date.valueOf(entity.getDate()),
                     entity.getLocalCode(),
                     entity.getArtistCode(),
+                    entity.getStatus(),
                     entity.getCode()
             );
             return true;
@@ -97,7 +99,7 @@ public class EventDAO implements GenericDAO<Event> {
 
     private Event mapResultSetToEvent(ResultSet rs) {
         try {
-            return new Event(
+            Event event = new Event(
                     rs.getString("code"),
                     rs.getString("name"),
                     rs.getString("description"),
@@ -105,6 +107,8 @@ public class EventDAO implements GenericDAO<Event> {
                     rs.getString("local_code"),
                     rs.getString("artist_code")
             );
+            event.setStatus(rs.getString("status"));
+            return event;
         } catch (SQLException e) {
             System.err.println("[EventDAO] Error mapping event record: " + e.getMessage());
             return null;

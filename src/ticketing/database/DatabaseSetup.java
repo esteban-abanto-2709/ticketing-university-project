@@ -27,8 +27,7 @@ public class DatabaseSetup {
     }
 
     private static void createDatabaseIfNotExists() {
-        try (Connection conn = DriverManager.getConnection(Config.SERVER_URL, Config.USER, Config.PASSWORD);
-             Statement stmt = conn.createStatement()) {
+        try (Connection conn = DriverManager.getConnection(Config.SERVER_URL, Config.USER, Config.PASSWORD); Statement stmt = conn.createStatement()) {
 
             String sql = "CREATE DATABASE IF NOT EXISTS " + Config.DB_NAME;
             stmt.executeUpdate(sql);
@@ -90,17 +89,18 @@ public class DatabaseSetup {
 
     private static void createEventTable() {
         String sql = """
-                    CREATE TABLE IF NOT EXISTS events (
-                        code VARCHAR(20) PRIMARY KEY,
-                        name VARCHAR(100) NOT NULL,
-                        description TEXT,
-                        date DATE NOT NULL,
-                        local_code VARCHAR(20) NOT NULL,
-                        artist_code VARCHAR(20) NOT NULL,
-                        FOREIGN KEY (local_code) REFERENCES locals(code),
-                        FOREIGN KEY (artist_code) REFERENCES artists(code)
-                    )
-                """;
+                CREATE TABLE IF NOT EXISTS events (
+                    code VARCHAR(20) PRIMARY KEY,
+                    name VARCHAR(100) NOT NULL,
+                    description TEXT,
+                    date DATE NOT NULL,
+                    local_code VARCHAR(20) NOT NULL,
+                    artist_code VARCHAR(20) NOT NULL,
+                    status VARCHAR(20) NOT NULL DEFAULT 'PLANIFICADO',
+                    FOREIGN KEY (local_code) REFERENCES locals(code),
+                    FOREIGN KEY (artist_code) REFERENCES artists(code)
+                )
+            """;
         try {
             DatabaseManager.execute(sql);
             ConsoleFormatter.printDebug("[DatabaseSetup] Table 'events' verified or created successfully.");
@@ -131,15 +131,15 @@ public class DatabaseSetup {
 
     private static void createTicketTypeTable() {
         String sql = """
-                CREATE TABLE IF NOT EXISTS ticket_types (
-                    event_code VARCHAR(20) NOT NULL,
-                    name VARCHAR(50) NOT NULL,
-                    description TEXT,
-                    price DECIMAL(10, 2) NOT NULL,
-                    PRIMARY KEY (event_code, name),
-                    FOREIGN KEY (event_code) REFERENCES events(code)
-                )
-            """;
+                    CREATE TABLE IF NOT EXISTS ticket_types (
+                        event_code VARCHAR(20) NOT NULL,
+                        name VARCHAR(50) NOT NULL,
+                        description TEXT,
+                        price DECIMAL(10, 2) NOT NULL,
+                        PRIMARY KEY (event_code, name),
+                        FOREIGN KEY (event_code) REFERENCES events(code)
+                    )
+                """;
         try {
             DatabaseManager.execute(sql);
             ConsoleFormatter.printDebug("[DatabaseSetup] Table 'ticket_types' verified or created successfully.");
@@ -150,18 +150,18 @@ public class DatabaseSetup {
 
     private static void createTicketTable() {
         String sql = """
-                CREATE TABLE IF NOT EXISTS tickets (
-                    id INT PRIMARY KEY AUTO_INCREMENT,
-                    event_code VARCHAR(20) NOT NULL,
-                    zone_name VARCHAR(100) NOT NULL,
-                    ticket_number INT NOT NULL,
-                    type VARCHAR(50) NULL,
-                    status VARCHAR(20) NOT NULL DEFAULT 'AVAILABLE',
-                    sale_id INT NULL,
-                    FOREIGN KEY (event_code, zone_name) REFERENCES zones(event_code, name),
-                    UNIQUE KEY unique_ticket (event_code, zone_name, ticket_number)
-                )
-            """;
+                    CREATE TABLE IF NOT EXISTS tickets (
+                        id INT PRIMARY KEY AUTO_INCREMENT,
+                        event_code VARCHAR(20) NOT NULL,
+                        zone_name VARCHAR(100) NOT NULL,
+                        ticket_number INT NOT NULL,
+                        type VARCHAR(50) NULL,
+                        status VARCHAR(20) NOT NULL DEFAULT 'AVAILABLE',
+                        sale_id INT NULL,
+                        FOREIGN KEY (event_code, zone_name) REFERENCES zones(event_code, name),
+                        UNIQUE KEY unique_ticket (event_code, zone_name, ticket_number)
+                    )
+                """;
         try {
             DatabaseManager.execute(sql);
             ConsoleFormatter.printDebug("[DatabaseSetup] Table 'tickets' verified or created successfully.");

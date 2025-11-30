@@ -23,7 +23,9 @@ public class EventController {
     }
 
     public Event findByCode(String code) {
-        if (code == null || code.isBlank()) return null;
+        if (code == null || code.isBlank()) {
+            return null;
+        }
         return eventDAO.findByCode(code);
     }
 
@@ -40,17 +42,35 @@ public class EventController {
     }
 
     public boolean delete(String code) {
-        if (code == null || code.isBlank()) return false;
+        if (code == null || code.isBlank()) {
+            return false;
+        }
         return eventDAO.deleteByCode(code);
     }
 
     public boolean exists(String code) {
-        if (code == null || code.isBlank()) return false;
+        if (code == null || code.isBlank()) {
+            return false;
+        }
         return eventDAO.findByCode(code) != null;
     }
 
     public boolean hasEvents() {
         List<Event> all = eventDAO.findAll();
         return all != null && !all.isEmpty();
+    }
+
+    public boolean updateStatus(String code, String newStatus) {
+        if (code == null || code.isBlank() || newStatus == null) {
+            return false;
+        }
+
+        Event event = eventDAO.findByCode(code);
+        if (event == null) {
+            return false;
+        }
+
+        event.setStatus(newStatus);
+        return eventDAO.update(event);
     }
 }

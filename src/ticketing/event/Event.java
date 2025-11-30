@@ -9,6 +9,7 @@ public class Event {
     private LocalDate date;
     private String localCode;
     private String artistCode;
+    private String status;
 
     public Event(String code, String name, String description, LocalDate date,
                  String localCode, String artistCode) {
@@ -18,6 +19,7 @@ public class Event {
         this.date = date;
         this.localCode = localCode;
         this.artistCode = artistCode;
+        this.status = "PLANIFICADO";
     }
 
     public String getCode() {
@@ -44,6 +46,10 @@ public class Event {
         return artistCode;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -62,6 +68,10 @@ public class Event {
 
     public void setArtistCode(String artistCode) {
         this.artistCode = artistCode;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

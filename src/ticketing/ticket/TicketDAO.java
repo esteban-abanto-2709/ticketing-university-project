@@ -164,4 +164,103 @@ public class TicketDAO {
             return null;
         }
     }
+
+    public int countAvailableByZone(String eventCode, String zoneName) {
+        String sql = "SELECT COUNT(*) AS total FROM tickets WHERE event_code = ? AND zone_name = ? AND status = 'AVAILABLE'";
+        try (ResultSet rs = DatabaseManager.query(sql, eventCode, zoneName)) {
+            if (rs != null && rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException e) {
+            System.err.println("[TicketDAO] Error counting available tickets by zone: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    public List<Ticket> findAvailableByZone(String eventCode, String zoneName, int limit) {
+        String sql = "SELECT * FROM tickets WHERE event_code = ? AND zone_name = ? AND status = 'AVAILABLE' LIMIT ?";
+        List<Ticket> tickets = new ArrayList<>();
+
+        try (ResultSet rs = DatabaseManager.query(sql, eventCode, zoneName, limit)) {
+            while (rs != null && rs.next()) {
+                tickets.add(mapResultSetToTicket(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("[TicketDAO] Error finding available tickets: " + e.getMessage());
+        }
+
+        return tickets;
+    }
+
+    public boolean updateTicket(Ticket ticket) {
+        String sql = "UPDATE tickets SET type = ?, status = ?, sale_id = ? WHERE event_code = ? AND zone_name = ? AND ticket_number = ?";
+        try {
+            DatabaseManager.execute(sql,
+                    ticket.getType(),
+                    ticket.getStatus(),
+                    ticket.getSaleId(),
+                    ticket.getEventCode(),
+                    ticket.getZoneName(),
+                    ticket.getTicketNumber()
+            );
+            return true;
+        } catch (Exception e) {
+            System.err.println("[TicketDAO] Error updating ticket: " + e.getMessage());
+            return false;
+        }
+    }
+
+    public List<Ticket> findBySaleId(Integer saleId) {
+        if (saleId == null) return new ArrayList<>();
+
+        String sql = "SELECT * FROM tickets WHERE sale_id = ? ORDER BY event_code, zone_name, ticket_number";
+        List<Ticket> tickets = new ArrayList<>();
+
+        try (ResultSet rs = DatabaseManager.query(sql, saleId)) {
+            while (rs != null && rs.next()) {
+                tickets.add(mapResultSetToTicket(rs));
+            }
+        } catch (SQLException e) {
+            System.err.println("[TicketDAO] Error finding tickets by saleId: " + e.getMessage());
+        }
+
+        return tickets;
+    }
+
+    public boolean updateBatch(List<Ticket> tickets) {
+        if (tickets == null || tickets.isEmpty()) {
+            return false;
+        }
+
+        String sql = "UPDATE tickets SET type = ?, status = ?, sale_id = ? WHERE event_code = ? AND zone_name = ? AND ticket_number = ?";
+
+        try (Connection conn = DatabaseManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            for (Ticket ticket : tickets) {
+                stmt.setString(1, ticket.getType());
+                stmt.setString(2, ticket.getStatus());
+
+                if (ticket.getSaleId() != null) {
+                    stmt.setInt(3, ticket.getSaleId());
+                } else {
+                    stmt.setNull(3, java.sql.Types.INTEGER);
+                }
+
+                stmt.setString(4, ticket.getEventCode());
+                stmt.setString(5, ticket.getZoneName());
+                stmt.setInt(6, ticket.getTicketNumber());
+
+                stmt.addBatch();
+            }
+
+            stmt.executeBatch();
+            ConsoleFormatter.printDebug("[TicketDAO] Batch update executed successfully");
+            return true;
+
+        } catch (Exception e) {
+            System.err.println("[TicketDAO] Error updating batch tickets: " + e.getMessage());
+            return false;
+        }
+    }
 }

@@ -8,6 +8,7 @@ import ticketing.local.LocalView;
 import ticketing.artist.ArtistView;
 import ticketing.event.EventView;
 import ticketing.sponsor.SponsorView;
+import ticketing.sale.SaleView;
 
 import ticketing.utils.ConsoleFormatter;
 import ticketing.utils.InputValidator;
@@ -34,7 +35,7 @@ public class Ticketing {
             ConsoleFormatter.printTabbed("[2] Gestión de Artistas");
             ConsoleFormatter.printTabbed("[3] Gestión de Sponsors");
             ConsoleFormatter.printTabbed("[4] Gestión de Eventos");
-            ConsoleFormatter.printTabbed("[5] Gestión de Ventas (pendiente)");
+            ConsoleFormatter.printTabbed("[5] Gestión de Ventas");
 
             ConsoleFormatter.printLineBreak();
             ConsoleFormatter.printTabbed("[9] Salir");
@@ -44,13 +45,20 @@ public class Ticketing {
             option = InputValidator.getIntInRange("Seleccione una opción: ", 1, 9);
 
             switch (option) {
-                case 1 -> LocalView.showMenu();
-                case 2 -> ArtistView.showMenu();
-                case 3 -> SponsorView.showMenu();
-                case 4 -> EventView.showMenu();
-                case 5 -> ConsoleFormatter.printLeft("Módulo de Ventas aún no implementado.");
-                case 9 -> ConsoleFormatter.printLeft("Saliendo del sistema...");
-                default -> ConsoleFormatter.printLeft("Opción no válida.");
+                case 1 ->
+                    LocalView.showMenu();
+                case 2 ->
+                    ArtistView.showMenu();
+                case 3 ->
+                    SponsorView.showMenu();
+                case 4 ->
+                    EventView.showMenu();
+                case 5 ->
+                    SaleView.showMenu();
+                case 9 ->
+                    ConsoleFormatter.printLeft("Saliendo del sistema...");
+                default ->
+                    ConsoleFormatter.printLeft("Opción no válida.");
             }
 
             if (option != 9) {
